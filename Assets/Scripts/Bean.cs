@@ -20,5 +20,6 @@ public class Bean : MonoBehaviour {
 
     void OnTriggerEnter(Collider other) {
         //if collid player, it will be disabled by Player.cs
-    }
+    }       
+
 }

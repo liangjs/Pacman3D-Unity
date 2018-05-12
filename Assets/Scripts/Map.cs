@@ -213,9 +213,9 @@ namespace Pacman3D
             int xMax = Max(new GamePos(T.points[0]).x, new GamePos(T.points[1]).x, new GamePos(T.points[2]).x);
             int yMax = Max(new GamePos(T.points[0]).y, new GamePos(T.points[1]).y, new GamePos(T.points[2]).y);
 
-            for (int i = Max(0, xMin - 2); i < Min(n - 1, xMax + 2); ++i)
+            for (int i = Math.Max(0, xMin - 2); i < Math.Min(n - 1, xMax + 2); ++i)
             {
-                for (int j = Max(0, yMin - 2); j < Min(m - 1, yMax + 2); ++j)
+                for (int j = Math.Max(0, yMin - 2); j < Math.Min(m - 1, yMax + 2); ++j)
                 {
                     if (t[i, j] == Obstacle) continue;
 

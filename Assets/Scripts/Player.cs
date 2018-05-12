@@ -55,10 +55,11 @@ public class Player : MonoBehaviour {
             if (status == "live")
             {
                 status = "wall";
-                hit_wall++;
+                hit_wall = hit_wall + 1;
                 hit_wall_time = 0;
                 if (hit_wall == 3)
                     status = "dead";
+                mixedRealityCamera.GetComponent<Camera>().cullingMask ^= (1 << 9);
             }
             //TODO: add some audio
         }
@@ -85,6 +86,7 @@ public class Player : MonoBehaviour {
             if (status == "wall")
                 status = "live";
             hit_wall_time = 0;
+            mixedRealityCamera.GetComponent<Camera>().cullingMask ^= (1 << 9);
         }
         SetCountText();
     }
@@ -92,7 +94,7 @@ public class Player : MonoBehaviour {
     void SetCountText()
     {
         // Update the text field of our 'countText' variable
-        countText.text = "Count: " + count.ToString();
+        countText.text = "Count: " + count.ToString() + "    Hit Wall:" + hit_wall.ToString();
 
         // Check if dead
         if (status == "dead")
