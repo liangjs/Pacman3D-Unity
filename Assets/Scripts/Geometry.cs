@@ -1,12 +1,12 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 
 namespace Pacman3D
 {
-    public class Point3D
-    {
-        public float[] coord = new float[3] { 0, 0, 0 };
+	public class Point3D
+	{
+		public float[] coord = new float[3]  { 0, 0, 0};
 
         public float x
         {
@@ -31,63 +31,63 @@ namespace Pacman3D
             coord[1] = y;
             coord[2] = z;
         }
+       
+		public Point3D(Point3D point3d)
+	    {
+		    coord[0] = point3d.coord[0];
+		    coord[1] = point3d.coord[1];
+		    coord[2] = point3d.coord[2];
+	    }
 
-        public Point3D(ref Point3D point3d)
-        {
-            coord[0] = point3d.coord[0];
-            coord[1] = point3d.coord[1];
-            coord[2] = point3d.coord[2];
-        }
-
-        // operator redefine
-        public static Point3D operator +(Point3D a, Point3D b)
+		// operator redefine
+		public static Point3D operator+(Point3D a, Point3D b)
         {
             Point3D point3d = new Point3D(a.coord[0] + b.coord[0], a.coord[1] + b.coord[1], a.coord[2] + b.coord[2]);
             return point3d;
         }
 
-        // public static Point3D operator += (Point3D point3d_1,Point3D point_3d_2);
-        public static Point3D operator -(Point3D a, Point3D b)
+		// public static Point3D operator += (Point3D point3d_1,Point3D point_3d_2);
+		public static Point3D operator-(Point3D a,Point3D b)
         {
             Point3D point3d = new Point3D(a.coord[0] - b.coord[0], a.coord[1] - b.coord[1], a.coord[2] - b.coord[2]);
             return point3d;
         }
-        // public static ref Point3D operator -=(const ref Point3D);
-        public static Point3D operator -(Point3D a)
+		// public static ref Point3D operator -=(const ref Point3D);
+		public static Point3D operator-(Point3D a)
         {
-            Point3D point3d = new Point3D(-a.coord[0], -a.coord[1], -a.coord[2]);
+            Point3D point3d=new Point3D(-a.coord[0],-a.coord[1],-a.coord[2]);
             return point3d;
         }
 
-        public static Point3D operator *(float k, Point3D p)
+		public static Point3D operator*(float k,Point3D p)
         {
-            Point3D point3d = new Point3D(k * p.coord[0], k * p.coord[1], k * p.coord[2]);
+            Point3D point3d = new Point3D(k*p.coord[0],k*p.coord[1],k*p.coord[2]);
             return point3d;
         }
-        // public static ref Point3D operator*=(float);
-        public static Point3D operator /(float k, Point3D p)
+		// public static ref Point3D operator*=(float);
+		public static Point3D operator/ (float k,Point3D p)
         {
-            Point3D point3d = new Point3D(p.coord[0] / k, p.coord[1] / k, p.coord[2] / k);
+            Point3D point3d=new Point3D(p.coord[0] / k, p.coord[1] / k, p.coord[2] / k);
             return point3d;
         }
-
-        public float len()
+        
+		public float len()
         {
             return (float)System.Math.Sqrt(len2());
         }
-        public float len2()
+		public float len2()
         {
             return coord[0] * coord[0] + coord[1] * coord[1] + coord[2] * coord[2];
         }
-
-
+		
+        
         public void normalize()
-        {
-            float l = len();
-            coord[0] /= l;
-            coord[1] /= l;
-            coord[2] /= l;
-        }
+	    {
+		    float l = len();
+		    coord[0] /= l;
+		    coord[1] /= l;
+		    coord[2] /= l;
+	    }
 
         public static float distance(Point3D p1, Point3D p2)
         {
@@ -121,87 +121,83 @@ namespace Pacman3D
 		    p.coord[2] = p.coord[1] + center.coord[2];
 	    }*/
 
-        public static void multiByChannel(Point3D a, Point3D b)
-        {
-            a.coord[0] *= b.coord[0];
-            a.coord[1] *= b.coord[1];
-            a.coord[2] *= b.coord[2];
-        }
-
+        public static void multiByChannel(Point3D a,Point3D b)
+	    {
+		    a.coord[0] *= b.coord[0];
+		    a.coord[1] *= b.coord[1];
+		    a.coord[2] *= b.coord[2];
+	    }
+    
         static Point3D crossProduct(Point3D a, Point3D b)
         {
             Point3D point3d = new Point3D(a.coord[1] * b.coord[2] - a.coord[2] * b.coord[1],
-            -a.coord[0] * b.coord[2] + a.coord[2] * b.coord[0],
-            a.coord[0] * b.coord[1] - a.coord[1] * b.coord[0]);
+			-a.coord[0] * b.coord[2] + a.coord[2] * b.coord[0],
+			a.coord[0] * b.coord[1] - a.coord[1] * b.coord[0]);
             return point3d;
         }
-
-        static float dotsProduct(Point3D a, Point3D b)
+    
+        static float dotsProduct(Point3D a,  Point3D b)
         {
             return a.coord[0] * b.coord[0] + a.coord[1] * b.coord[1] + a.coord[2] * b.coord[2];
         }
 
-
+        
         static Point3D elemMult(Point3D a, Point3D b)
         {
             Point3D point3d = new Point3D(a.coord[0] * b.coord[0], a.coord[1] * b.coord[1], a.coord[2] * b.coord[2]);
             return point3d;
         }
-
-
+    
+     
         static float determinant(Point3D a, Point3D b, Point3D c)
         {
             return a.coord[0] * b.coord[1] * c.coord[2] - a.coord[0] * b.coord[2] * c.coord[1] +
-            a.coord[1] * b.coord[2] * c.coord[0] - a.coord[1] * b.coord[0] * c.coord[2] +
-            a.coord[2] * b.coord[0] * c.coord[1] - a.coord[2] * b.coord[1] * c.coord[0];
+			a.coord[1] * b.coord[2] * c.coord[0] - a.coord[1] * b.coord[0] * c.coord[2] +
+			a.coord[2] * b.coord[0] * c.coord[1] - a.coord[2] * b.coord[1] * c.coord[0];
         }
 
-
+    
         static float calcArea(Point3D a, Point3D b, Point3D c)
         {
             return crossProduct(b - a, c - b).len() / 2;
         }
-
-
-    };
+    
+	
+	};
 
     public class Line
     {
         public Point3D st, ed;
-        Line(Point3D _st, Point3D _ed)
+        public Line(Point3D _st, Point3D _ed)
         {
-            st.coord[0] = _st.coord[0];
-            st.coord[1] = _st.coord[1];
-            st.coord[2] = _st.coord[2];
-            ed.coord[0] = _ed.coord[0];
-            ed.coord[1] = _ed.coord[1];
-            ed.coord[2] = _ed.coord[2];
+            st = new Point3D(_st);
+            ed = new Point3D(_ed);
         }
     }
 
     // Point3D operator*(float, const ref Point3D );
 
     public class Triangle
-    {
+	{
 
         public Point3D[] points = new Point3D[3];
-
-        Point3D normvf; /* normal vector */
+   
+		Point3D normvf; /* normal vector */
 
 
         public Triangle(Point3D p1, Point3D p2, Point3D p3)
-        {
-            points[0] = p1;
-            points[1] = p2;
-            points[2] = p3;
-            Point3D ta = p2 - p1, tb = p3 - p1;
-            float xy = ta.coord[0] * tb.coord[1] - ta.coord[1] * tb.coord[0];
-            float xz = ta.coord[0] * tb.coord[2] - ta.coord[2] * tb.coord[0];
-            float yz = ta.coord[1] * tb.coord[2] - ta.coord[2] * tb.coord[1];
-            Point3D point3d = new Point3D(yz, -xz, xy);
-            normvf = point3d;
+	    {
+		    points[0] = p1;
+		    points[1] = p2;
+		    points[2] = p3;
+		    Point3D ta = p2 - p1, tb = p3 - p1;
+		    float xy = ta.coord[0] * tb.coord[1] - ta.coord[1] * tb.coord[0];
+		    float xz = ta.coord[0] * tb.coord[2] - ta.coord[2] * tb.coord[0];
+		    float yz = ta.coord[1] * tb.coord[2] - ta.coord[2] * tb.coord[1];
+            Point3D point3d = new Point3D(yz,-xz,xy);
+		    normvf = point3d;
             normvf.normalize();
-        }
+	    }
 
         /*
         public void rotate(Point3D p, float dr, Point3D center, Point3D axis)
@@ -211,30 +207,30 @@ namespace Pacman3D
 		    points[2].rotate(dr, center, axis);
 		    normvf.rotate(dr, center, axis);
 	    }*/
-    };
-    public class Rectangle
-    {
+	};
+	public class Rectangle
+	{
         public Point3D[] points = new Point3D[2];
-        Rectangle(Point3D p1, Point3D p2)
+		Rectangle(Point3D p1,  Point3D p2)
         {
-            points[0] = p1;
-            points[1] = p2;
+            points[0]=p1;
+            points[1]=p2;
         }
         // public static void RectangleIntersect(Rectangle r1,Rectangle r2);
-
-
-    };
-    public class Circle
-    {
-        public Point3D c;
-        public float r;
-        public Circle(Point3D _c, float _r = 0)
+        
+	
+	};
+	public class Circle
+	{
+		public Point3D c;
+		public float r;
+		public Circle(Point3D _c, float _r = 0)
         {
-            c = _c;
-            r = _r;
+            c=_c;
+            r=_r;
         }
-
-        public static bool CircleIntersect(Circle c1, Circle c2)
+        
+        public static bool CircleIntersect(Circle c1,Circle c2)
         {
             /*float distance=(float)Math.Sqrt((c1.c.coord[0]-c2.c.coord[0])*(c1.c.coord[0]-c2.c.coord[0])
                 +(c1.c.coord[1]-c2.c.coord[1])*(c1.c.coord[1]-c2.c.coord[1])
@@ -243,16 +239,16 @@ namespace Pacman3D
             else return false;
         }
 
-        public static bool RCIntersect(Rectangle r, Circle c)
+        public static bool RCIntersect(Rectangle r,Circle c)
         {
-            float distance1 = (float)Math.Sqrt((c.c.coord[0] - r.points[0].coord[0]) * (c.c.coord[0] - r.points[0].coord[0])
-                + (c.c.coord[1] - r.points[0].coord[1]) * (c.c.coord[1] - r.points[0].coord[1]));
-            float distance2 = (float)Math.Sqrt((c.c.coord[0] - r.points[1].coord[0]) * (c.c.coord[0] - r.points[1].coord[0])
-                + (c.c.coord[1] - r.points[1].coord[1]) * (c.c.coord[1] - r.points[1].coord[1]));
-            float distance = Math.Min(distance1, distance2);
+            float distance1 = (float)Math.Sqrt((c.c.coord[0] - r.points[0].coord[0])*(c.c.coord[0] - r.points[0].coord[0])
+                +(c.c.coord[1]-r.points[0].coord[1])*(c.c.coord[1]-r.points[0].coord[1]));
+            float distance2 = (float)Math.Sqrt((c.c.coord[0] - r.points[1].coord[0])*(c.c.coord[0] - r.points[1].coord[0])
+                +(c.c.coord[1]-r.points[1].coord[1])*(c.c.coord[1]-r.points[1].coord[1]));
+            float distance=Math.Min(distance1,distance2);
             return distance > c.r;
-        }
-    };
+         }
+	};
 
     public class FloatCmp
     {
@@ -268,5 +264,5 @@ namespace Pacman3D
             return (x > EPS ? 1 : 0) - (x < -EPS ? 1 : 0);
         }
     }
-
+	
 }

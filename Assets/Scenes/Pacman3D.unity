@@ -748,8 +748,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c3221d5fff37eab40baf368ac87aff13, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  spatialUnderstandingObj: {fileID: 0}
-  spatialMappingObj: {fileID: 0}
+  spatialUnderstandingObj: {fileID: 1462149178}
+  spatialMappingObj: {fileID: 459735203}
 --- !u!4 &1518305068
 Transform:
   m_ObjectHideFlags: 0
