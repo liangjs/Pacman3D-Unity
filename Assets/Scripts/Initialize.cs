@@ -18,6 +18,15 @@ public class Initialize : MonoBehaviour {
 
     private bool finished = false;
 
+    public bool Finished
+    {
+        get
+        {
+            return finished;
+        }
+        private set { }
+    }
+
     // Use this for initialization
     void Start () {
         spatialUnderstanding = spatialUnderstandingObj.GetComponent<SpatialUnderstanding>();
@@ -41,7 +50,6 @@ public class Initialize : MonoBehaviour {
         {
             mappingManager.StartObserver();
             spatialUnderstanding.RequestBeginScanning();
-            customMesh.CreateMeshColliders = true;
         }
     }
 
@@ -50,11 +58,11 @@ public class Initialize : MonoBehaviour {
         if (finished)
             return;
 
+        Debug.Log("scan finish");
         finished = true;
         mappingManager.StopObserver();
         spatialUnderstanding.RequestFinishScan();
         recognizer.StopCapturingGestures();
-
-        customMesh.SurfaceObjects;
+        customMesh.DrawProcessedMesh = false;
     }
 }
