@@ -365,7 +365,6 @@ namespace Pacman3D
         Monster[] Mons;
         Circle Play;
         private const int CirMaxNum = 100;
-        public int CirNum;
         public int RecNum;
         public float xLimit;
         public float yLimit;
@@ -396,7 +395,7 @@ namespace Pacman3D
                     }
                 }
                 if (!flag) continue;
-                for (int j = 0; j < CirNum; ++j)
+                for (int j = 0; j < BeanNum; ++j)
                 {
                     if (Beans[j].isCrash(tmp))
                     {
