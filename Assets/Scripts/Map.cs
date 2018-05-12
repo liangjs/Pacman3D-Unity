@@ -108,25 +108,25 @@ namespace Pacman3D
                     if (t[i,j] == Obstacle) continue;
 
                     float x = (float)i, y = (float)j;
-                    Point3D p = new Point3D(x + EPS, y + EPS);
+                    Point3D p = new Point3D(x + FloatCmp.EPS, y + FloatCmp.EPS);
                     if (inTriangle(p, T))
                     {
                         setType(new GamePos(i, j), Obstacle);
                         continue;
                     }
-                    p = new Point3D(x + 1 - EPS, y + 1 - EPS);
+                    p = new Point3D(x + 1 - FloatCmp.EPS, y + 1 - FloatCmp.EPS);
                     if (inTriangle(p, T))
                     {
                         setType(new GamePos(i, j), Obstacle);
                         continue;
                     }
-                    p = new Point3D(x + 1 - EPS, y + EPS);
+                    p = new Point3D(x + 1 - FloatCmp.EPS, y + FloatCmp.EPS);
                     if (inTriangle(p, T))
                     {
                         setType(new GamePos(i, j), Obstacle);
                         continue;
                     }
-                    p = new Point3D(x + EPS, y + 1 - EPS);
+                    p = new Point3D(x + FloatCmp.EPS, y + 1 - FloatCmp.EPS);
                     if (inTriangle(p, T))
                     {
                         setType(new GamePos(i, j), Obstacle);
@@ -312,12 +312,12 @@ namespace Pacman3D
             cir = _p;
             p = new GamePos(_p.c);
         }
-
+        /*
         public void move(Point3D _p)
         {
             cir.c = cir.c + _p;
-            p = new GamePos(cir);
-        }
+            p = new GamePos(cir.c);
+        }*/
 	};
 
 	public class SuccesiveGameMap : GameMap 
@@ -336,8 +336,8 @@ namespace Pacman3D
         {
             Recs = new Rectangle[_n * _m];
             Beans = new Circle[CirNum];
-            xLimit = (float)_n - EPS;
-            yLimit = (float)_m - EPS;
+            xLimit = (float)_n - FloatCmp.EPS;
+            yLimit = (float)_m - FloatCmp.EPS;
         }
 		
 	    private void generateBeans(int bnum)
@@ -348,11 +348,11 @@ namespace Pacman3D
             {
                 float x = (float)ran.NextDouble() * xLimit;
                 float y = (float)ran.NextDouble() * yLimit;
-                Circle tmp = new Circle(x, y);
+                Circle tmp = new Circle(new Point3D(x, y));
                 bool flag = true;
                 for (int j = 0; j < RecNum; ++j)
                 {
-                    if (Recs[j].isCrash(tmp))
+                    if (Circle.RCIntersect(Recs[j], tmp))
                     {
                         flag = false;
                     }
@@ -360,7 +360,7 @@ namespace Pacman3D
                 if (!flag) continue;
                 for (int j = 0; j < CirNum; ++j)
                 {
-                    if (Beans[j].isCrash(tmp))
+                    if (Circle.CircleIntersect(Beans[j], tmp))
                     {
                         flag = false;
                     }
@@ -378,23 +378,23 @@ namespace Pacman3D
             {
                 float x = (float)ran.NextDouble() * xLimit;
                 float y = (float)ran.NextDouble() * yLimit;
-                Monster tmp = new Monster(new Circle(x, y));
+                Monster tmp = new Monster(new Circle(new Point3D(x, y)));
                 bool flag = true;
                 for (int j = 0; j < RecNum; ++j)
                 {
-                    if (Recs[j].isCrash(tmp))
+                    if (Circle.RCIntersect(Recs[j], tmp.cir))
                     {
                         flag = false;
                     }
                 }
                 if (!flag) continue;
-                if (flag) Beans[i++] = tmp;
+                if (flag) Mons[i++] = tmp; // !!!!
             }
         }
 		
 	    public void setPlayer(Point3D p)
         {
-            Play = new Circle((float)p.x, (float)p.y);
+            Play = new Circle(p);
         }
         void generateMap()
         {// using base's generate and transform to successive
