@@ -39,16 +39,27 @@ public class Player : MonoBehaviour {
             // Run the 'SetCountText()' function (see below)
             SetCountText();
         }
+        if (other.gameObject.CompareTag("Monster"))
+        {
+            // Run the 'SetCountText()' function (see below)
+            count = 0;
+            SetCountText("dead");
+        }
     }
 
     // Create a standalone function that can update the 'countText' UI and check if the required amount to win has been achieved
-    void SetCountText()
+    void SetCountText(string status = "live")
     {
         // Update the text field of our 'countText' variable
         countText.text = "Count: " + count.ToString();
 
-        // Check if our 'count' is equal to or exceeded 12
-        if (count >= 3)
+        // Check if dead
+        if (status == "dead")
+        {
+            winText.text = "Game Over! Please Restart!";
+        }
+        // Check if our 'count' is equal to or exceeded 2
+        if (count >= 2)
         {
             // Set the text value of our 'winText'
             winText.text = "You Win!";
