@@ -45,7 +45,48 @@ namespace Pacman3D
                 }
             }
         }
-		
+
+        void drawStroke(Line l)
+        {
+        }
+
+        void bfs(int x, int y)
+        {
+            GamePos[] q = new GamePos[n * m];
+            int l = 0, r = -1;
+            q[++r] = new GamePos(x, y);
+            while (l <= r)
+            {
+                GamePos p = q[l++];
+                setType(p, Obstacle);
+                if (p.y + 1 < m && t[p.x, p.y + 1] == Empty)
+                {
+                    q[++r] = new GamePos(p.x, p.y + 1);
+                } else if (p.y - 1 >= 0 && t[p.x, p.y -1] == Empty)
+                {
+                    q[++r] = new GamePos(p.x, p.y - 1);
+                } else if (p.x + 1 < n && t[p.x + 1, p.y] == Empty)
+                {
+                    q[++r] = new GamePos(p.x + 1, p.y);
+                } else if (p.x - 1 >= 0 && t[p.x - 1, p.y] == Empty)
+                {
+                    q[++r] = new GamePos(p.x - 1, p.y);
+                }
+            }
+        }
+
+        public addBorder(Line[] lines, int lineNum)
+        {
+            for (int i = 0; i < lineNum; ++i)
+            {
+                drawStroke(lines[i]);
+            }
+            bfs(0, 0);
+            bfs(n - 1, 0);
+            bfs(0, m - 1);
+            bfs(n - 1, m - 1);
+        }
+
 		
 		public GamePos worldToGame(ref Point3D worldPos)
         {
