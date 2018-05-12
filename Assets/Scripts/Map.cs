@@ -182,11 +182,40 @@ namespace Pacman3D
             return System.Math.Abs(Sabc - Spab - Spac - Spbc) < FloatCmp.EPS;
         }
 
-        public void addTriangle(Triangle T)
+        int Min(int x, int y, int z)
         {
-            for (int i = 0; i < n; ++i)
+            if (x <= y && x <= z)
             {
-                for (int j = 0; j < m; ++j)
+                return x;
+            }
+            else if (y <= x && y <= z)
+            {
+                return y;
+            }
+            else return z;
+        }
+        int Max(int x, int y, int z)
+        {
+            if (x >= y && x >= z)
+            {
+                return x;
+            }
+            else if (y >= x && y >= z)
+            {
+                return y;
+            }
+            else return z;
+        }
+        private void addTriangle(ref Triangle T)
+        {
+            int xMin = Min(new GamePos(T.points[0]).x, new GamePos(T.points[1]).x, new GamePos(T.points[2]).x);
+            int yMin = Min(new GamePos(T.points[0]).y, new GamePos(T.points[1]).y, new GamePos(T.points[2]).y);
+            int xMax = Max(new GamePos(T.points[0]).x, new GamePos(T.points[1]).x, new GamePos(T.points[2]).x);
+            int yMax = Max(new GamePos(T.points[0]).y, new GamePos(T.points[1]).y, new GamePos(T.points[2]).y);
+
+            for (int i = Max(0, xMin - 2); i < Min(n - 1, xMax + 2); ++i)
+            {
+                for (int j = Max(0, yMin - 2); j < Min(m - 1, yMax + 2); ++j)
                 {
                     if (t[i, j] == Obstacle) continue;
 
