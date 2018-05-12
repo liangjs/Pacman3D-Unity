@@ -47,7 +47,29 @@ namespace Pacman3D
         }
 
         void drawStroke(Line l)
-        {// setType(new Point3D(x, y), Obstacle);
+        {
+            float x1, x2, y1, y2;
+            if (l.st.x < l.ed.x)
+            {
+                x1 = l.st.x;
+                x2 = l.ed.x;
+                y1 = l.st.y;
+                y2 = l.ed.y;
+            }
+            else
+            {
+                x2 = l.st.x;
+                x1 = l.ed.x;
+                y2 = l.st.y;
+                y1 = l.ed.y;
+            }
+            float dx = x2 - x1;
+            float dy = y2 - y1;
+            for (int x = (int)x1; x <= (int)x2; ++x)
+            {
+                float y = y1 + dy * (x - x1) / dx;
+                setType(new GamePos(x, (int)y), Obstacle);
+            }
         }
 
         void bfs(int x, int y)
