@@ -303,16 +303,16 @@ namespace Pacman3D
 	
 	class Monster
 	{
-		public Point3D pos;
+		public Circle cir;
         public GamePos p;
-		Monster(ref Point3D _p){
-            pos = _p;
-            p = new GamePos(_p);
+		Monster(ref Circle _p){
+            cir = _p;
+            p = new GamePos(_p.c);
         }
 
         public void move(ref Point3D _p)
         {
-            pos = pos + _p;
+            cir.c = cir.c + _p;
             p = GamePos(pos);
         }
 	};
@@ -320,7 +320,9 @@ namespace Pacman3D
 	public class SuccesiveGameMap:GameMap 
 	{
 		Rectangle [] Recs;
-		Circle [] Cirs;
+		Circle [] Beans;
+        Monster[] Mons;
+        Circle Play;
         private const int CirMaxNum = 100;
         public int CirNum;
         public int RecNum;
@@ -330,7 +332,7 @@ namespace Pacman3D
 		SuccesiveGameMap(int _n = 0, int _m = 0):base(_n, _m)
         {
             Recs = new Rectangle[_n * _m];
-            Cirs = new Circle[CirNum];
+            Beans = new Circle[CirNum];
             xLimit = (float)_n - EPS;
             yLimit = (float)_m - EPS;
         }
@@ -343,33 +345,60 @@ namespace Pacman3D
             {
                 float x = ran.NextDouble() * xLimit;
                 float y = ran.NextDouble() * yLimit;
-                Circle tmp = new Circle()
+                Circle tmp = new Circle(x, y);
+                bool flag = true;
                 for (int j = 0; j < RecNum; ++j)
                 {
-                    
+                    if (Recs[j].isCrash(tmp))
+                    {
+                        flag = false;
+                    }
                 }
+                if (!flag) continue;
+                for (int j = 0; j < CirNum; ++j)
+                {
+                    if (Beans[j].isCrash(tmp))
+                    {
+                        flag = false;
+                    }
+                }
+                if (flag) Beans[i++] = tmp;
             }
         }
-        void generateMonsters();
+        void generateMonsters()
+        {
+            Random ran = new Random();
+            for (int i = 0; i < 3;)
+            {
+                float x = ran.NextDouble() * xLimit;
+                float y = ran.NextDouble() * yLimit;
+                Monster tmp = new Monster(Circle(x, y));
+                bool flag = true;
+                for (int j = 0; j < RecNum; ++j)
+                {
+                    if (Recs[j].isCrash(tmp))
+                    {
+                        flag = false;
+                    }
+                }
+                if (!flag) continue;
+                if (flag) Beans[i++] = tmp;
+            }
+        }
 		
-	public:	
-		void setPlayer(const GamePos & p);
-		void generateMap(); // using base's generate and transform to successive
+	    public void setPlayer(Point3D p)
+        {
+            Play = new Circle((float)p.x, (float)p.y);
+        }
+        void generateMap()
+        {// using base's generate and transform to successive
+            generate();
+            generateBeans();
+            generateMonsters();
+        }
 		// need : generate() -> generateBeans() -> generateMonsters() 
 		
 		void paintMap(); //generate a graph for small map
 		/* @myp : fill this ! */
 	};
-
-	struct GameBoard
-	{
-		GameMap gameMap;
-		GamePos playerPos;
-		int monsterNum;
-		std::vector<Monster> monsters;
-
-		/* other necessary properties and functions */
-	};
-
-	GameMap *generateMap(const std::vector<Triangle> &mesh);
 }
