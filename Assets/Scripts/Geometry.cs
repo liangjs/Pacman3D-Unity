@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
-using System.Windows.Forms;
 
 namespace Pacman3D
 {
@@ -63,32 +61,23 @@ namespace Pacman3D
             Point3D point3d=new Point3D(p.value[0] / k, p.value[1] / k, p.value[2] / k);
             return point3d;
         }
-		// public static ref Point3D operator/=(float);
-		public static Point3D operator = (Point3D a,Point3D b)
-	    {
-		    a.value[0] = b.value[0];
-		    a.value[1] = b.value[1];
-		    a.value[2] = b.value[2];
-		    return *this;
-	    }
-
-
-		public static float len()
+        
+		public float len()
         {
-            return sqrt(len2());
+            return (float)System.Math.Sqrt(len2());
         }
-		public static float len2(Point3D p)
+		public float len2()
         {
             return sqr(p.value[0])+sqr(p.value[1])+sqr(p.value[2]);
         }
 		
         
-        public static void normalize(Point3D p)
+        public void normalize()
 	    {
 		    float l = len();
-		    p.value[0] /= l;
-		    p.value[1] /= l;
-		    p.value[2] /= l;
+		    value[0] /= l;
+		    value[1] /= l;
+		    value[2] /= l;
 	    }
 
         public static void rotate(Point3D p, float dr,  Point3D center, Point3D axis)

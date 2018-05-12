@@ -25,7 +25,7 @@ GameObject:
   - component: {fileID: 114062153851632044}
   - component: {fileID: 54969301513380708}
   m_Layer: 0
-  m_Name: Sphere 1
+  m_Name: Monster
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
