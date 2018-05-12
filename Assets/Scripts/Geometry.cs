@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using UnityEngine;
 
 namespace Pacman3D
 {
@@ -39,8 +40,15 @@ namespace Pacman3D
 		    coord[2] = point3d.coord[2];
 	    }
 
-		// operator redefine
-		public static Point3D operator+(Point3D a, Point3D b)
+        public Point3D(Vector3 p)
+        {
+            coord[0] = p.x;
+            coord[1] = p.y;
+            coord[2] = p.z;
+        }
+
+        // operator redefine
+        public static Point3D operator+(Point3D a, Point3D b)
         {
             Point3D point3d = new Point3D(a.coord[0] + b.coord[0], a.coord[1] + b.coord[1], a.coord[2] + b.coord[2]);
             return point3d;
@@ -162,7 +170,6 @@ namespace Pacman3D
             return crossProduct(b - a, c - b).len() / 2;
         }
     
-	
 	};
 
     public class Line

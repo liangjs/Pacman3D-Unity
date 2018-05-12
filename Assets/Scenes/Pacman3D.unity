@@ -450,6 +450,11 @@ Prefab:
       propertyPath: m_RootOrder
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 114742747811649402, guid: 3eddd1c29199313478dd3f912bfab2ab,
+        type: 2}
+      propertyPath: Cursor
+      value: 
+      objectReference: {fileID: 1171183437}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 3eddd1c29199313478dd3f912bfab2ab, type: 2}
   m_IsPrefabParent: 0
@@ -613,8 +618,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fe11eb4a0b2d9e740af4e9876755621c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  spatialProcessingObj: {fileID: 0}
-  initializeObj: {fileID: 0}
+  spatialProcessingObj: {fileID: 2061608564}
+  initializeObj: {fileID: 1518305066}
+  mixedRealityCamera: {fileID: 1815512152}
+  resourcePlane: {fileID: 1263110896019256, guid: b521f240b39eea84899f3054572f2a32,
+    type: 2}
 --- !u!1001 &972550930
 Prefab:
   m_ObjectHideFlags: 0
@@ -844,6 +852,12 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 18
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1171183437 stripped
+MonoBehaviour:
+  m_PrefabParentObject: {fileID: 114611684728110934, guid: a611e772ef8ddf64d8106a9cbb70f31c,
+    type: 2}
+  m_PrefabInternal: {fileID: 1380514364}
+  m_Script: {fileID: 11500000, guid: 0decd33ba8702954885a62b5bc1a778e, type: 3}
 --- !u!1001 &1256783043
 Prefab:
   m_ObjectHideFlags: 0
@@ -2142,6 +2156,11 @@ Prefab:
         type: 2}
       propertyPath: drawVisualMeshes
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 114000012149591842, guid: 2ed75ffdf9031c94e8bce4b3d17b9928,
+        type: 2}
+      propertyPath: RoomModel
+      value: 
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 2ed75ffdf9031c94e8bce4b3d17b9928, type: 2}
