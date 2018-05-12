@@ -15,10 +15,10 @@ public class Bean : MonoBehaviour {
 	}
 
     void OnCollisionEnter(Collision other) {
-        Destroy(this.gameObject);
+        
     }
 
     void OnTriggerEnter(Collider other) {
-        Destroy(this.gameObject);
+        //if collid player, it will be disabled by Player.cs
     }
 }
