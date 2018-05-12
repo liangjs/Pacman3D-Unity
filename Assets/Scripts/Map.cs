@@ -46,7 +46,7 @@ namespace Pacman3D
             }
         }
 
-        void drawStroke(Line l)
+        private void drawStroke(Line l)
         {
             float x1, x2, y1, y2;
             if (l.st.x < l.ed.x)
@@ -65,15 +65,23 @@ namespace Pacman3D
             }
             float dx = x2 - x1;
             float dy = y2 - y1;
-            for (int x = (int)x1; x <= (int)x2; ++x)
-            {
-                float y = y1 + dy * (x - x1) / dx;
-                setType(new GamePos(x, (int)y), Obstacle);
-            }
+            if (dx > FloatCmp.EPS)
+                for (int x = (int)x1; x <= (int)x2; ++x)
+                {
+                    float y = y1 + dy * (x - x1) / dx;
+                    setType(new GamePos(x, (int)y), Obstacle);
+                }
+            else
+                for (int y = (int)Math.Min(y1,y2); y <= (int)Math.Max(y1, y2); ++y)
+                    setType(new GamePos((int)x1, (int)y), Obstacle);
         }
 
         void bfs(int x, int y)
         {
+            if (t[x, y] != Empty)
+            {
+                return;
+            }
             GamePos[] q = new GamePos[n * m];
             int l = 0, r = -1;
             q[++r] = new GamePos(x, y);
@@ -84,33 +92,42 @@ namespace Pacman3D
                 if (p.y + 1 < m && t[p.x, p.y + 1] == Empty)
                 {
                     q[++r] = new GamePos(p.x, p.y + 1);
-                } else if (p.y - 1 >= 0 && t[p.x, p.y -1] == Empty)
+                }
+                else if (p.y - 1 >= 0 && t[p.x, p.y - 1] == Empty)
                 {
                     q[++r] = new GamePos(p.x, p.y - 1);
-                } else if (p.x + 1 < n && t[p.x + 1, p.y] == Empty)
+                }
+                else if (p.x + 1 < n && t[p.x + 1, p.y] == Empty)
                 {
                     q[++r] = new GamePos(p.x + 1, p.y);
-                } else if (p.x - 1 >= 0 && t[p.x - 1, p.y] == Empty)
+                }
+                else if (p.x - 1 >= 0 && t[p.x - 1, p.y] == Empty)
                 {
                     q[++r] = new GamePos(p.x - 1, p.y);
                 }
             }
         }
 
-        public void addBorder(Line[] lines, int lineNum)
+        public void addBorder(Line[] lines)
         {
-            for (int i = 0; i < lineNum; ++i)
+            for (int i = 0; i < lines.Length; ++i)
             {
                 drawStroke(lines[i]);
             }
-            bfs(0, 0);
-            bfs(n - 1, 0);
-            bfs(0, m - 1);
-            bfs(n - 1, m - 1);
+            for (int i = 0; i < n; ++i)
+            {
+                bfs(i, 0);
+                bfs(i, m - 1);
+            }
+            for (int i = 0; i < m; ++i)
+            {
+                bfs(0, i);
+                bfs(n - 1, i);
+            }
         }
 
-		
-		public GamePos worldToGame(Point3D worldPos)
+
+        public GamePos worldToGame(Point3D worldPos)
         {
             float x = worldPos.x, y = worldPos.y;
             x = x * rate + x_bias;
@@ -135,7 +152,6 @@ namespace Pacman3D
             setType(new GamePos(x, y), Wall);
             setType(new GamePos(x - 1, y), Wall);
             setType(new GamePos(x - 2, y), Wall);
-
         }
         private void buildWallLeft(int x, int y)
         {
@@ -162,7 +178,7 @@ namespace Pacman3D
             return System.Math.Abs(Sabc - Spab - Spac - Spbc) < FloatCmp.EPS;
         }
 		
-        private void addTriangle(Triangle T)
+        public void addTriangle(Triangle T)
         {
             for (int i = 0; i < n; ++i)
             {
@@ -389,15 +405,18 @@ namespace Pacman3D
 		Circle [] Beans;
         Monster[] Mons;
         Circle Play;
-        private const int CirMaxNum = 100;
         public int RecNum;
         public float xLimit;
         public float yLimit;
         public int BeanNum;
-		SuccesiveGameMap(int _n = 0, int _m = 0):base(_n, _m)
+        private const float Bean_radius = 1;
+        private const float Monster_radius = 1;
+        private const float Player_radius = 0.5f;
+
+        public SuccesiveGameMap(int _n = 0, int _m = 0):base(_n, _m)
         {
             Recs = new Rectangle[_n * _m];
-            Beans = new Circle[CirMaxNum];
+            Beans = new Circle[n * m];
             xLimit = (float)_n - FloatCmp.EPS;
             yLimit = (float)_m - FloatCmp.EPS;
         }
@@ -410,7 +429,7 @@ namespace Pacman3D
             {
                 float x = (float)ran.NextDouble() * xLimit;
                 float y = (float)ran.NextDouble() * yLimit;
-                Circle tmp = new Circle(new Point3D(x, y));
+                Circle tmp = new Circle(new Point3D(x, y), Bean_radius);
                 bool flag = true;
                 for (int j = 0; j < RecNum; ++j)
                 {
@@ -436,11 +455,12 @@ namespace Pacman3D
         void generateMonsters()
         {
             Random ran = new Random();
+            Mons = new Monster[Monster_Num];
             for (int i = 0; i < Monster_Num;)
             {
                 float x = (float)ran.NextDouble() * xLimit;
                 float y = (float)ran.NextDouble() * yLimit;
-                Monster tmp = new Monster(new Circle(new Point3D(x, y)));
+                Monster tmp = new Monster(new Circle(new Point3D(x, y), Monster_radius));
                 bool flag = true;
                 for (int j = 0; j < RecNum; ++j)
                 {
@@ -456,9 +476,9 @@ namespace Pacman3D
 		
 	    public void setPlayer(Point3D p)
         {
-            Play = new Circle(p);
+            Play = new Circle(p, Player_radius);
         }
-        void generateMap()
+        public void generateMap()
         {// using base's generate and transform to successive
             generate();
             generateBeans(n * m);

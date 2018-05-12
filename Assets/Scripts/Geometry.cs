@@ -32,7 +32,7 @@ namespace Pacman3D
             coord[2] = z;
         }
        
-		public Point3D(ref Point3D point3d)
+		public Point3D(Point3D point3d)
 	    {
 		    coord[0] = point3d.coord[0];
 		    coord[1] = point3d.coord[1];
@@ -168,14 +168,10 @@ namespace Pacman3D
     public class Line
     {
         public Point3D st, ed;
-        Line(Point3D _st, Point3D _ed)
+        public Line(Point3D _st, Point3D _ed)
         {
-            st.coord[0] = _st.coord[0];
-            st.coord[1] = _st.coord[1];
-            st.coord[2] = _st.coord[2];
-            ed.coord[0] = _ed.coord[0];
-            ed.coord[1] = _ed.coord[1];
-            ed.coord[2] = _ed.coord[2];
+            st = new Point3D(_st);
+            ed = new Point3D(_ed);
         }
     }
 
