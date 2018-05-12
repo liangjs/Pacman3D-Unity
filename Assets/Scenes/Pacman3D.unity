@@ -440,6 +440,9 @@ MonoBehaviour:
   spatialProcessingObj: {fileID: 2061608564}
   initializeObj: {fileID: 1518305066}
   mixedRealityCamera: {fileID: 1815512152}
+  resourcePlane: {fileID: 1263110896019256, guid: b521f240b39eea84899f3054572f2a32,
+    type: 2}
+  spatialUnderStandingObj: {fileID: 1462149178}
 --- !u!1001 &972550930
 Prefab:
   m_ObjectHideFlags: 0
@@ -1221,6 +1224,11 @@ Prefab:
         type: 2}
       propertyPath: drawVisualMeshes
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 114000012149591842, guid: 2ed75ffdf9031c94e8bce4b3d17b9928,
+        type: 2}
+      propertyPath: RoomModel
+      value: 
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 2ed75ffdf9031c94e8bce4b3d17b9928, type: 2}

@@ -20,7 +20,7 @@ namespace Pacman3D
 
     public class transform_coord
     {
-        public const float rate = 5f;
+        public const float rate = 0.2f;
         public float maxx, maxz, minx, minz;
         public GamePos tranformxyz(int num, Point3D[] p)
         {
@@ -190,7 +190,7 @@ namespace Pacman3D
             }
         }
 
-
+        /*
         public GamePos worldToGame(Point3D worldPos)
         {
             float x = worldPos.x, y = worldPos.y;
@@ -205,7 +205,7 @@ namespace Pacman3D
             x = (x - x_bias) / rate;
             y = (y - y_bias) / rate;
             return new Point3D(x, y, height);
-        }
+        }*/
 
         private void setType(GamePos p, int _t)
         {
@@ -270,7 +270,7 @@ namespace Pacman3D
             }
             else return z;
         }
-        private void addTriangle(ref Triangle T)
+        public void addTriangle(Triangle T)
         {
             int xMin = Min(new GamePos(T.points[0]).x, new GamePos(T.points[1]).x, new GamePos(T.points[2]).x);
             int yMin = Min(new GamePos(T.points[0]).y, new GamePos(T.points[1]).y, new GamePos(T.points[2]).y);

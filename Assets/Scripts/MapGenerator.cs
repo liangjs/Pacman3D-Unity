@@ -1,4 +1,5 @@
-﻿using HoloToolkit.Unity.SpatialMapping;
+﻿using HoloToolkit.Unity;
+using HoloToolkit.Unity.SpatialMapping;
 using Pacman3D;
 using System.Collections;
 using System.Collections.Generic;
@@ -9,12 +10,16 @@ public class MapGenerator : MonoBehaviour {
     public GameObject spatialProcessingObj;
     public GameObject initializeObj;
     public GameObject mixedRealityCamera;
+    public GameObject resourcePlane;
+    //public GameObject spatialUnderStandingObj;
 
     private SurfaceMeshesToPlanes meshToPlanes;
     private Initialize initializer;
-
+    //private SpatialUnderstandingSourceMesh spatialUnderstandingSource;
 
     private bool meshProcessed = false;
+
+    public SuccesiveGameMap gameMap = null;
 
     // Use this for initialization
     void Start () {
@@ -22,6 +27,8 @@ public class MapGenerator : MonoBehaviour {
         initializer = initializeObj.GetComponent<Initialize>();
 
         meshToPlanes.MakePlanesComplete += SurfaceMeshesToPlanes_MakePlanesComplete;
+
+        //spatialUnderstandingSource = spatialUnderStandingObj.GetComponent<SpatialUnderstandingSourceMesh>();
     }
 	
 	// Update is called once per frame
@@ -36,18 +43,14 @@ public class MapGenerator : MonoBehaviour {
             meshToPlanes.MakePlanes();
             meshProcessed = true;
         }
-
     }
 
     // Handler for the SurfaceMeshesToPlanes MakePlanesComplete event.
     private void SurfaceMeshesToPlanes_MakePlanesComplete(object source, System.EventArgs args)
     {
         Debug.Log("plane complete");
-        List<GameObject> floors;//, walls;
-        floors = meshToPlanes.GetActivePlanes(PlaneTypes.Floor);
-        GameObject floor = floors[0];
-        Vector3 flr_pos = floor.transform.parent.TransformPoint(floor.transform.localPosition);
-        Vector3 flr_scl = floor.transform.parent.TransformPoint(floor.transform.localScale);
+        SurfacePlane floorSurface = null, ceilSurface = null;
+        
         //walls = meshToPlanes.GetActivePlanes(PlaneTypes.Wall);
 
         foreach (GameObject plane in meshToPlanes.ActivePlanes)
@@ -55,64 +58,59 @@ public class MapGenerator : MonoBehaviour {
             SurfacePlane surfacePlane = plane.GetComponent<SurfacePlane>();
             if (surfacePlane != null)
             {
-                if (((surfacePlane.PlaneType & PlaneTypes.Floor) == surfacePlane.PlaneType))
+                if ((surfacePlane.PlaneType & PlaneTypes.Floor) == surfacePlane.PlaneType)
                 {
                     //OrientedBoundingBox flr = surfacePlane.Plane.Bounds;
                     //Debug.Log(flr);
-                    /*GameObject obj = Instantiate(Resources.Load("Prefabs/Plane") as GameObject);
-                    obj.transform.SetPositionAndRotation(flr.Center, flr.Rotation);*/
-                    //obj.transform = surfacePlane.transform;
-                    ;
+                    /*
+                    GameObject obj = Instantiate(resourcePlane);
+                    obj.transform.localPosition = surfacePlane.transform.localPosition;
+                    obj.transform.localRotation = surfacePlane.transform.localRotation;
+                    obj.transform.localScale = surfacePlane.transform.localScale;
+                    */
+                    floorSurface = surfacePlane;
                 }
-                else
-                    surfacePlane.IsVisible = false;
+                else if ((surfacePlane.PlaneType & PlaneTypes.Ceiling) == surfacePlane.PlaneType)
+                    ceilSurface = surfacePlane;
+                surfacePlane.IsVisible = false;
             }
         }
+
+        Bounds floorbd = floorSurface.GetComponent<Renderer>().bounds;
+        Bounds ceilbd = ceilSurface.GetComponent<Renderer>().bounds;
+
+        transform_coord trancord = new transform_coord();
+        GamePos nm = trancord.tranformxyz(4, new Point3D[4] { new Point3D(floorbd.center.x - floorbd.extents.x / 2, 0, floorbd.center.z - floorbd.extents.z / 2),
+                                                    new Point3D(floorbd.center.x + floorbd.extents.x / 2, 0, floorbd.center.z - floorbd.extents.z / 2),
+                                                    new Point3D(floorbd.center.x + floorbd.extents.x / 2, 0, floorbd.center.z + floorbd.extents.z / 2),
+                                                    new Point3D(floorbd.center.x - floorbd.extents.x / 2, 0, floorbd.center.z + floorbd.extents.z / 2)});
+
+        gameMap = new SuccesiveGameMap(nm.x + 1, nm.y + 1);
+        gameMap.addBorder(new Line[4] {
+                new Line(new Point3D(0,0), new Point3D(nm.x, 0)),
+                new Line(new Point3D(nm.x, 0), new Point3D(nm.x, nm.y)),
+                new Line(new Point3D(nm.x, nm.y),new Point3D(0, nm.y)),
+                new Line(new Point3D(0, nm.y),new Point3D(0,0))
+            });
+        gameMap.setPlayer(new Point3D(mixedRealityCamera.transform.localPosition));
 
         List<MeshFilter> meshFilters = SpatialMappingManager.Instance.GetMeshFilters();
         for (int i = 0; i < meshFilters.Count; i++)
         {
             Vector3[] vertices = meshFilters[i].mesh.vertices;
             int[] tris = meshFilters[i].mesh.triangles;
-            for (int j = 0; j < tris.Length; ++j)
+            for (int j = 0; j < tris.Length; j += 3)
             {
-                //Debug.Log(vertices);
-                /*
-                GameObject m_goTriangle = new GameObject();
-                m_goTriangle.AddComponent<MeshFilter>();
-                m_goTriangle.AddComponent<MeshRenderer>();
-                Mesh m_meshTriangle = m_goTriangle.GetComponent<MeshFilter>().mesh;
-                m_meshTriangle.Clear();
-                m_meshTriangle.uv = new Vector2[] { new Vector2(0, 0), new Vector2(0, 0.25f), new Vector2(0.25f, 0.25f) };
-                m_meshTriangle.vertices = new Vector3[] { vertices[tris[ };
-                m_meshTriangle.triangles = new int[] { 0, 1, 2 };
-                */
+                Vector3 p1 = vertices[tris[j]];
+                Vector3 p2 = vertices[tris[j+1]];
+                Vector3 p3 = vertices[tris[j+2]];
+                Vector3 center = (p1 + p2 + p3) / 3;
+                if (floorbd.Contains(center) || ceilbd.Contains(center))
+                    continue;
+                gameMap.addTriangle(new Triangle(new Point3D(p1), new Point3D(p2), new Point3D(p3)));
             }
         }
 
-        /*
-        Transform floor_trans = floor.GetComponent<Transform>();
-        Debug.Log(floor.transform.TransformPoint(new Vector3(0, 0, 0)));
-        Debug.Log(floor.transform.TransformPoint(new Vector3(10, 0, 0)));
-        Debug.Log(floor.transform.TransformPoint(new Vector3(10, 0, 10)));
-        Debug.Log(floor.transform.TransformPoint(new Vector3(0, 0, 10)));
-        */
-
-            //SuccesiveGameMap gameMap = new SuccesiveGameMap(100, 100);
-            /*gameMap.addBorder(new Line[4] {
-                new Line(new Point3D(0,0), new Point3D(99, 0)),
-                new Line(new Point3D(99, 0), new Point3D(99, 99)),
-                new Line(new Point3D(99, 99),new Point3D(0, 99)),
-                new Line(new Point3D(0, 99),new Point3D(0,0))
-            });
-            */
-            /*gameMap.addBorder(new Line[4] {
-                new Line(new Point3D(10,10), new Point3D(99, 10)),
-                new Line(new Point3D(99, 10), new Point3D(99, 99)),
-                new Line(new Point3D(99, 99),new Point3D(10, 99)),
-                new Line(new Point3D(10, 99),new Point3D(10, 10))
-            });
-            gameMap.setPlayer();
-            gameMap.generateMap();*/
+        gameMap.generateMap();
     }
 }
