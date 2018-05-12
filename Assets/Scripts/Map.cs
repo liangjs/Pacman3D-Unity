@@ -182,36 +182,22 @@ namespace Pacman3D
             return System.Math.Abs(Sabc - Spab - Spac - Spbc) < FloatCmp.EPS;
         }
 
-        int Min(int x, int y, int z)
+        int Min(int x, int y)
         {
-            if (x <= y && x <= z)
-            {
-                return x;
-            }
-            else if (y <= x && y <= z)
-            {
-                return y;
-            }
-            else return z;
+            if (x < y) return x;
+            return y;
         }
-        int Max(int x, int y, int z)
+        int Max(int x, int y)
         {
-            if (x >= y && x >= z)
-            {
-                return x;
-            }
-            else if (y >= x && y >= z)
-            {
-                return y;
-            }
-            else return z;
+            if (x > y) return x;
+            return y;
         }
         private void addTriangle(ref Triangle T)
         {
-            int xMin = Min(new GamePos(T.points[0]).x, new GamePos(T.points[1]).x, new GamePos(T.points[2]).x);
-            int yMin = Min(new GamePos(T.points[0]).y, new GamePos(T.points[1]).y, new GamePos(T.points[2]).y);
-            int xMax = Max(new GamePos(T.points[0]).x, new GamePos(T.points[1]).x, new GamePos(T.points[2]).x);
-            int yMax = Max(new GamePos(T.points[0]).y, new GamePos(T.points[1]).y, new GamePos(T.points[2]).y);
+            int xMin = Min(Min(new GamePos(T.points[0]).x, new GamePos(T.points[1]).x), new GamePos(T.points[2]).x);
+            int yMin = Min(Min(new GamePos(T.points[0]).y, new GamePos(T.points[1]).y), new GamePos(T.points[2]).y);
+            int xMax = Max(Max(new GamePos(T.points[0]).x, new GamePos(T.points[1]).x), new GamePos(T.points[2]).x);
+            int yMax = Max(Max(new GamePos(T.points[0]).y, new GamePos(T.points[1]).y), new GamePos(T.points[2]).y);
 
             for (int i = Math.Max(0, xMin - 2); i < Math.Min(n - 1, xMax + 2); ++i)
             {
