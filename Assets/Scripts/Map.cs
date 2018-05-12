@@ -1,4 +1,5 @@
 using System;
+
 namespace Pacman3D
 {
     public class GamePos
@@ -83,7 +84,7 @@ namespace Pacman3D
             float x = worldPos.x, y = worldPos.y;
             x = x* rate + x_bias;
 		    y = y* rate + y_bias;
-		    return new Point3D(x, y, 0.0);
+		    return new Point3D(x, y, 0.0f);
         }
         private float cross(Point3D a, Point3D b){
 	    	return a.x* b.y - a.y* b.x;
@@ -95,7 +96,7 @@ namespace Pacman3D
             float Spab = System.Math.Abs(cross(p0 - p, p1 - p));
             float Spac = System.Math.Abs(cross(p0 - p, p2 - p));
             float Spbc = System.Math.Abs(cross(p1 - p, p2 - p));
-            return System.Math.Abs(Sabc - Spab - Spac - Spbc) < EPS;
+            return System.Math.Abs(Sabc - Spab - Spac - Spbc) < FloatCmp.EPS;
         }
 		
         private void addTriangle(Triangle T)

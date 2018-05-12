@@ -4,16 +4,9 @@ using System.Linq;
 
 namespace Pacman3D
 {
-    class epsinf
-    {
-        const float EPS = 1e-5f;
-	    const float INF = 1e10f;
-    }
-	
 	public class Point3D
 	{
-		// float value[3];
-		float[] value = new float[3]  { 0, 0, 0};
+		public float[] value = new float[3]  { 0, 0, 0};
 
 		// construct function
 		public Point3D(float x = 0, float y = 0, float z = 0)
@@ -68,7 +61,7 @@ namespace Pacman3D
         }
 		public float len2()
         {
-            return sqr(p.value[0])+sqr(p.value[1])+sqr(p.value[2]);
+            return value[0] * value[0] + value[1] * value[1] + value[2] * value[2];
         }
 		
         
@@ -79,18 +72,18 @@ namespace Pacman3D
 		    value[1] /= l;
 		    value[2] /= l;
 	    }
-
+        /*
         public static void rotate(Point3D p, float dr,  Point3D center, Point3D axis)
 	    {
 		    p.value[0] -= center.value[0];
 		    p.value[1] -= center.value[1];
 		    p.value[2] -= center.value[2];
-		    float q1 = cos(dr / 2),
-			q2 = sin(dr / 2) * axis.value[0],
-			q3 = sin(dr / 2) * axis.value[1],
-			q4 = sin(dr / 2) * axis.value[2];
+		    float q1 = (float)Math.Cos(dr / 2),
+			q2 = (float)Math.Sin(dr / 2) * axis.value[0],
+			q3 = (float)Math.Sin(dr / 2) * axis.value[1],
+			q4 = (float)Math.Sin(dr / 2) * axis.value[2];
 		    float tx = p.value[0], ty = p.value[1], tz = p.value[2];
-		    p.value[0] = (sqr(q1) + sqr(q2) - sqr(q3)
+		    p.value[0] = (q1*q1 + q2*q2 - sqr(q3)
 			    - sqr(q4)) * tx + 2 * (q2 * q3 - q1 * q4) * ty
 			    + 2 * (q2 * q4 + q1 * q3) * tz;
 		    p.value[1] = 2 * (q2 * q3 + q1 * q4) * tx
@@ -102,7 +95,7 @@ namespace Pacman3D
 		    p.value[0] = p.value[0] + center.value[0];
 		    p.value[1] = p.value[0]+ center.value[1];
 		    p.value[2] = p.value[1] + center.value[2];
-	    }
+	    }*/
         
         public static void multiByChannel(Point3D a,Point3D b)
 	    {
@@ -111,7 +104,7 @@ namespace Pacman3D
 		    a.value[2] *= b.value[2];
 	    }
     
-        static Point3D crossProduct(ref Point3D a, ref Point3D b)
+        static Point3D crossProduct(Point3D a, Point3D b)
         {
             Point3D point3d = new Point3D(a.value[1] * b.value[2] - a.value[2] * b.value[1],
 			-a.value[0] * b.value[2] + a.value[2] * b.value[0],
@@ -119,20 +112,20 @@ namespace Pacman3D
             return point3d;
         }
     
-        static float dotsProduct(ref Point3D a,  ref Point3D b)
+        static float dotsProduct(Point3D a,  Point3D b)
         {
             return a.value[0] * b.value[0] + a.value[1] * b.value[1] + a.value[2] * b.value[2];
         }
 
         
-        static Point3D elemMult(ref Point3D a, ref Point3D b)
+        static Point3D elemMult(Point3D a, Point3D b)
         {
             Point3D point3d = new Point3D(a.value[0] * b.value[0], a.value[1] * b.value[1], a.value[2] * b.value[2]);
             return point3d;
         }
     
      
-        static float determinant(ref Point3D a, ref Point3D b, ref Point3D c)
+        static float determinant(Point3D a, Point3D b, Point3D c)
         {
             return a.value[0] * b.value[1] * c.value[2] - a.value[0] * b.value[2] * c.value[1] +
 			a.value[1] * b.value[2] * c.value[0] - a.value[1] * b.value[0] * c.value[2] +
@@ -140,7 +133,7 @@ namespace Pacman3D
         }
 
     
-        static float calcArea(ref Point3D a, ref Point3D b, ref Point3D c)
+        static float calcArea(Point3D a, Point3D b, Point3D c)
         {
             return crossProduct(b - a, c - b).len() / 2;
         }
@@ -152,8 +145,8 @@ namespace Pacman3D
 
 	public class Triangle
 	{
-	
-        Point3D[] points=new Point3D[3];
+
+        public Point3D[] points = new Point3D[3];
    
 		Point3D normvf; /* normal vector */
 
@@ -168,22 +161,23 @@ namespace Pacman3D
 		    float xz = ta.value[0] * tb.value[2] - ta.value[2] * tb.value[0];
 		    float yz = ta.value[1] * tb.value[2] - ta.value[2] * tb.value[1];
             Point3D point3d = new Point3D(yz,-xz,xy);
-		    normvf =point3d;
-		    normvf /= normvf.len();
+		    normvf = point3d;
+            normvf.normalize();
 	    }
 
-        public static void rotate(Point3D p, float dr, Point3D center, Point3D axis)
+        /*
+        public void rotate(Point3D p, float dr, Point3D center, Point3D axis)
 	    {
 		    points[0].rotate(dr, center, axis);
 		    points[1].rotate(dr, center, axis);
 		    points[2].rotate(dr, center, axis);
 		    normvf.rotate(dr, center, axis);
-	    }
+	    }*/
 	};
 	public class Rectangle
 	{
-        Point3D[] points = new Point3D[2] ;
-		Rectangle( ref Point3D p1,  ref Point3D p2)
+        public Point3D[] points = new Point3D[2];
+		Rectangle(Point3D p1,  Point3D p2)
         {
             points[0]=p1;
             points[1]=p2;
@@ -194,8 +188,8 @@ namespace Pacman3D
 	};
 	public class Circle
 	{
-		Point3D c;
-		float r;
+		public Point3D c;
+		public float r;
 		Circle(Point3D _c, float _r = 0)
         {
             c=_c;
@@ -204,35 +198,37 @@ namespace Pacman3D
         
         public static bool CircleIntersect(Circle c1,Circle c2)
         {
-            float distance=sqrt((c1.c.value[0]-c2.c.value[0])*(c1.c.value[0]-c2.c.value[0])
+            float distance=(float)Math.Sqrt((c1.c.value[0]-c2.c.value[0])*(c1.c.value[0]-c2.c.value[0])
                 +(c1.c.value[1]-c2.c.value[1])*(c1.c.value[1]-c2.c.value[1])
                 +(c1.c.value[2]-c2.c.value[2])*(c1.c.value[2]-c2.c.value[2]));
-            if(distance(c1.c,c2.c)>=c1.r+c2.r) return true;
+            if (distance(c1.c, c2.c) >= c1.r + c2.r) return true;
             else return false;
         }
 
         public static bool RCIntersect(Rectangle r,Circle c)
         {
-            float distance1 = sqrt((c.c.value[0] - r.points[0].value[0])*(c.c.value[0] - r.points[0].value[0])
+            float distance1 = (float)Math.Sqrt((c.c.value[0] - r.points[0].value[0])*(c.c.value[0] - r.points[0].value[0])
                 +(c.c.value[1]-r.points[0].value[1])*(c.c.value[1]-r.points[0].value[1]));
-            float distance2 = sqrt((c.c.value[0] - r.points[1].value[0])*(c.c.value[0] - r.points[1].value[0])
+            float distance2 = (float)Math.Sqrt((c.c.value[0] - r.points[1].value[0])*(c.c.value[0] - r.points[1].value[0])
                 +(c.c.value[1]-r.points[1].value[1])*(c.c.value[1]-r.points[1].value[1]));
-            float distance=min(distance1,distance2);
+            float distance=Math.Min(distance1,distance2);
             return distance > c.r;
          }
 	};
-	/* x > y  -->  +1
-	x == y -->   0
-	x < y  -->  -1  */
-	delegate int dcmp(float x, float y = 0)
-	{
-		x -= y;
-		return int(x > EPS) - int(x < -EPS);
-	}
 
-	// C# template
-	template<class T> inline T sqr(T x)
-	{
-		return x * x;
-	}
+    public class FloatCmp
+    {
+        public const float EPS = 1e-5f;
+        public const float INF = 1e10f;
+
+        /* x > y  -->  +1
+	    x == y -->   0
+	    x < y  -->  -1  */
+        public static int cmp(float x, float y = 0)
+        {
+            x -= y;
+            return (x > EPS ? 1 : 0) - (x < -EPS ? 1 : 0);
+        }
+    }
+	
 }
