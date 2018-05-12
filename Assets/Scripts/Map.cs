@@ -422,13 +422,13 @@ namespace Pacman3D
                     }
                 }
                 if (!flag) continue;
-                if (flag) Beans[i++] = tmp;
+                if (flag) Mons[i++] = tmp;
             }
         }
 		
 	    public void setPlayer(Point3D p)
         {
-            Play = new Circle(p.x, p.y);
+            Play = new Circle(p);
         }
         void generateMap()
         {// using base's generate and transform to successive
