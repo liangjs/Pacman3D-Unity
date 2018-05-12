@@ -375,7 +375,7 @@ namespace Pacman3D
 		SuccesiveGameMap(int _n = 0, int _m = 0):base(_n, _m)
         {
             Recs = new Rectangle[_n * _m];
-            Beans = new Circle[CirNum];
+            Beans = new Circle[CirMaxNum];
             xLimit = (float)_n - FloatCmp.EPS;
             yLimit = (float)_m - FloatCmp.EPS;
         }

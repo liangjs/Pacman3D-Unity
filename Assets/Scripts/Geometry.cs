@@ -88,6 +88,14 @@ namespace Pacman3D
 		    coord[1] /= l;
 		    coord[2] /= l;
 	    }
+
+        public static float distance(Point3D p1, Point3D p2)
+        {
+            float d = (float)Math.Sqrt((p1.coord[0] - p2.coord[0]) * (p1.coord[0] - p2.coord[0])
+                + (p1.coord[1] - p2.coord[1]) * (p1.coord[1] - p2.coord[1])
+                + (p1.coord[2] - p2.coord[2]) * (p1.coord[2] - p2.coord[2]));
+            return d;
+        }
         /*
         public static void rotate(Point3D p, float dr,  Point3D center, Point3D axis)
 	    {
@@ -112,7 +120,7 @@ namespace Pacman3D
 		    p.coord[1] = p.coord[0]+ center.coord[1];
 		    p.coord[2] = p.coord[1] + center.coord[2];
 	    }*/
-        
+
         public static void multiByChannel(Point3D a,Point3D b)
 	    {
 		    a.coord[0] *= b.coord[0];
@@ -156,10 +164,24 @@ namespace Pacman3D
     
 	
 	};
-	
+
+    public class Line
+    {
+        public Point3D st, ed;
+        Line(Point3D _st, Point3D _ed)
+        {
+            st.coord[0] = _st.coord[0];
+            st.coord[1] = _st.coord[1];
+            st.coord[2] = _st.coord[2];
+            ed.coord[0] = _ed.coord[0];
+            ed.coord[1] = _ed.coord[1];
+            ed.coord[2] = _ed.coord[2];
+        }
+    }
+
     // Point3D operator*(float, const ref Point3D );
 
-	public class Triangle
+    public class Triangle
 	{
 
         public Point3D[] points = new Point3D[3];
@@ -214,10 +236,10 @@ namespace Pacman3D
         
         public static bool CircleIntersect(Circle c1,Circle c2)
         {
-            float distance=(float)Math.Sqrt((c1.c.coord[0]-c2.c.coord[0])*(c1.c.coord[0]-c2.c.coord[0])
+            /*float distance=(float)Math.Sqrt((c1.c.coord[0]-c2.c.coord[0])*(c1.c.coord[0]-c2.c.coord[0])
                 +(c1.c.coord[1]-c2.c.coord[1])*(c1.c.coord[1]-c2.c.coord[1])
-                +(c1.c.coord[2]-c2.c.coord[2])*(c1.c.coord[2]-c2.c.coord[2]));
-            if (distance(c1.c, c2.c) >= c1.r + c2.r) return true;
+                +(c1.c.coord[2]-c2.c.coord[2])*(c1.c.coord[2]-c2.c.coord[2]));*/
+            if (Point3D.distance(c1.c, c2.c) >= c1.r + c2.r) return true;
             else return false;
         }
 
