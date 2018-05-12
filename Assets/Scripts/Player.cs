@@ -10,8 +10,11 @@ public class Player : MonoBehaviour {
     public int count;
     // Use this for initialization
     void Start () {
-		
-	}
+        count = 0;
+        SetCountText();
+        winText.text = "";
+
+    }
 	
 	// Update is called once per frame
 	void Update () {
