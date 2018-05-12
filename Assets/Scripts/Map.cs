@@ -385,7 +385,7 @@ namespace Pacman3D
             {
                 float x = ran.NextDouble() * xLimit;
                 float y = ran.NextDouble() * yLimit;
-                Circle tmp = new Circle(x, y);
+                Circle tmp = new Circle(Point3D(x, y));
                 bool flag = true;
                 for (int j = 0; j < RecNum; ++j)
                 {
@@ -412,7 +412,7 @@ namespace Pacman3D
             {
                 float x = ran.NextDouble() * xLimit;
                 float y = ran.NextDouble() * yLimit;
-                Monster tmp = new Monster(Circle(x, y));
+                Monster tmp = new Monster(new Circle(new Point3D(x, y)));
                 bool flag = true;
                 for (int j = 0; j < RecNum; ++j)
                 {
@@ -428,7 +428,7 @@ namespace Pacman3D
 		
 	    public void setPlayer(Point3D p)
         {
-            Play = new Circle((float)p.x, (float)p.y);
+            Play = new Circle(p.x, p.y);
         }
         void generateMap()
         {// using base's generate and transform to successive
