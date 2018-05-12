@@ -8,8 +8,10 @@ public class Player : MonoBehaviour {
     public GameObject mixedRealityCamera;
     public Text countText, winText;
     public int count, hit_wall;
+    public const int MAX_BEAN_NUM = 3;
     public double hit_wall_time;
     public string status;
+    public AudioSource eat_bean, crash_wall, die, win;
     // Use this for initialization
     void Start () {
         count = 0;
@@ -24,7 +26,10 @@ public class Player : MonoBehaviour {
         Transform cameraTransform = mixedRealityCamera.GetComponent<Transform>();
         Vector3 position = cameraTransform.localPosition;
         transform.localPosition = position;
-
+        eat_bean.transform.localPosition = position;
+        crash_wall.transform.localPosition = position;
+        die.transform.localPosition = position;
+        win.transform.localPosition = position;
         SetCountText();
 	}
 
@@ -39,14 +44,19 @@ public class Player : MonoBehaviour {
 
             // Add one to the score variable 'count'
             count = count + 1;
-
-            //TODO: add some audio
+            if (count == MAX_BEAN_NUM)
+            {
+                status = "win";
+                win.Play();
+            }
+            eat_bean.Play();
         }
 
         if (other.gameObject.CompareTag("Monster"))
         {
             count = 0;
             status = "dead";
+            die.Play();
             //TODO: add some audio
         }
 
@@ -54,14 +64,17 @@ public class Player : MonoBehaviour {
         {
             if (status == "live")
             {
+                crash_wall.Play();
                 status = "wall";
                 hit_wall = hit_wall + 1;
                 hit_wall_time = 0;
                 if (hit_wall == 3)
+                {
                     status = "dead";
+                    die.Play();
+                }
                 mixedRealityCamera.GetComponent<Camera>().cullingMask ^= (1 << 9);
             }
-            //TODO: add some audio
         }
         SetCountText();
     }
@@ -74,6 +87,7 @@ public class Player : MonoBehaviour {
             if(hit_wall_time > 3.0)
             {
                 status = "dead";
+                die.Play();
             }
         }
         SetCountText();
@@ -114,7 +128,7 @@ public class Player : MonoBehaviour {
             winText.text = "";
 
         // Check if our 'count' is equal to or exceeded 2
-        if (count >= 2)
+        else if (status == "win")
         {
             // Set the text value of our 'winText'
             winText.text = "You Win!";
