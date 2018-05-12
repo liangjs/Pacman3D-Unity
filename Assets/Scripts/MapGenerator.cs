@@ -50,7 +50,10 @@ public class MapGenerator : MonoBehaviour {
     {
         Debug.Log("plane complete");
         SurfacePlane floorSurface = null, ceilSurface = null;
-        
+
+        Bounds floorbd = new Bounds();
+        Bounds ceilbd = new Bounds();
+
         //walls = meshToPlanes.GetActivePlanes(PlaneTypes.Wall);
 
         foreach (GameObject plane in meshToPlanes.ActivePlanes)
@@ -68,16 +71,25 @@ public class MapGenerator : MonoBehaviour {
                     obj.transform.localRotation = surfacePlane.transform.localRotation;
                     obj.transform.localScale = surfacePlane.transform.localScale;
                     */
-                    floorSurface = surfacePlane;
+                    Bounds bd = surfacePlane.GetComponent<Renderer>().bounds;
+                    if (floorSurface == null || bd.extents.x * bd.extents.z > floorbd.extents.x * floorbd.extents.z)
+                    {
+                        floorSurface = surfacePlane;
+                        floorbd = floorSurface.GetComponent<Renderer>().bounds;
+                    }
                 }
                 else if ((surfacePlane.PlaneType & PlaneTypes.Ceiling) == surfacePlane.PlaneType)
-                    ceilSurface = surfacePlane;
+                {
+                    Bounds bd = surfacePlane.GetComponent<Renderer>().bounds;
+                    if (ceilSurface == null || bd.extents.x * bd.extents.z > ceilbd.extents.x * ceilbd.extents.z)
+                    {
+                        ceilSurface = surfacePlane;
+                        ceilbd = ceilSurface.GetComponent<Renderer>().bounds;
+                    }
+                }
                 surfacePlane.IsVisible = false;
             }
         }
-
-        Bounds floorbd = floorSurface.GetComponent<Renderer>().bounds;
-        Bounds ceilbd = ceilSurface.GetComponent<Renderer>().bounds;
 
         transform_coord trancord = new transform_coord();
         GamePos nm = trancord.tranformxyz(4, new Point3D[4] { new Point3D(floorbd.center.x - floorbd.extents.x / 2, 0, floorbd.center.z - floorbd.extents.z / 2),

@@ -245,7 +245,6 @@ namespace Pacman3D
             return System.Math.Abs(Sabc - Spab - Spac - Spbc) < FloatCmp.EPS;
         }
 
-
         int Min(int x, int y, int z)
         {
             if (x <= y && x <= z)
