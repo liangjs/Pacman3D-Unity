@@ -18,6 +18,68 @@ namespace Pacman3D
         }
     }
 
+    public class transform_coord
+    {
+        public const float rate = 5f;
+        public float maxx, maxz, minx, minz;
+        public GamePos tranformxyz(int num, Point3D[] p)
+        {
+            maxx = Max_x(num, p);
+            minx = Min_x(num, p);
+            maxz = Max_z(num, p);
+            minz = Min_z(num, p);
+
+            // determine m, n   m:col_num  n:row_num  
+            int m = (int)((maxx - minx) / rate + 1);
+            int n = (int)((maxz - minz) / rate + 1);
+
+            return new GamePos(m, n);
+        }
+
+        public GamePos query(Point3D p)
+        {
+            int x = (int)((p.x - minx) / rate);
+            int y = (int)((p.z - minz) / rate);
+            return new GamePos(x, y);
+        }
+
+        private float Max_x(int num, Point3D[] p) // num is number of input dots(x,y,z)
+        {
+            float res = -FloatCmp.INF;
+            for (int i = 0; i < num; i++)
+            {
+                res = Math.Max(res, p[i].coord[0]);
+            }
+            return res;
+        }
+        private float Max_z(int num, Point3D[] p) // num is number of input dots(x,y,z)
+        {
+            float res = -FloatCmp.INF;
+            for (int i = 0; i < num; i++)
+            {
+                res = Math.Max(res, p[i].coord[2]);
+            }
+            return res;
+        }
+        private float Min_x(int num, Point3D[] p) // num is number of input dots(x,y,z)
+        {
+            float res = FloatCmp.INF;
+            for (int i = 0; i < num; i++)
+            {
+                res = Math.Min(res, p[i].coord[0]);
+            }
+            return res;
+        }
+        private float Min_z(int num, Point3D[] p) // num is number of input dots(x,y,z)
+        {
+            float res = FloatCmp.INF;
+            for (int i = 0; i < num; i++)
+            {
+                res = Math.Min(res, p[i].coord[2]);
+            }
+            return res;
+        }
+    };
 
     public class GameMap
     {
@@ -31,6 +93,7 @@ namespace Pacman3D
         public const float x_bias = 0.0f;
         public const float y_bias = 0.0f;
         public const int Monster_Num = 2;
+        public const int Passage_Width = 6;
         public int n, m;
         public int[,] t;
         public GameMap(int _n = 0, int _m = 0)
@@ -182,11 +245,41 @@ namespace Pacman3D
             return System.Math.Abs(Sabc - Spab - Spac - Spbc) < FloatCmp.EPS;
         }
 
-        public void addTriangle(Triangle T)
+
+        int Min(int x, int y, int z)
         {
-            for (int i = 0; i < n; ++i)
+            if (x <= y && x <= z)
             {
-                for (int j = 0; j < m; ++j)
+                return x;
+            }
+            else if (y <= x && y <= z)
+            {
+                return y;
+            }
+            else return z;
+        }
+        int Max(int x, int y, int z)
+        {
+            if (x >= y && x >= z)
+            {
+                return x;
+            }
+            else if (y >= x && y >= z)
+            {
+                return y;
+            }
+            else return z;
+        }
+        private void addTriangle(ref Triangle T)
+        {
+            int xMin = Min(new GamePos(T.points[0]).x, new GamePos(T.points[1]).x, new GamePos(T.points[2]).x);
+            int yMin = Min(new GamePos(T.points[0]).y, new GamePos(T.points[1]).y, new GamePos(T.points[2]).y);
+            int xMax = Max(new GamePos(T.points[0]).x, new GamePos(T.points[1]).x, new GamePos(T.points[2]).x);
+            int yMax = Max(new GamePos(T.points[0]).y, new GamePos(T.points[1]).y, new GamePos(T.points[2]).y);
+
+            for (int i = Math.Max(0, xMin - 2); i < Math.Min(n - 1, xMax + 2); ++i)
+            {
+                for (int j = Math.Max(0, yMin - 2); j < Math.Min(m - 1, yMax + 2); ++j)
                 {
                     if (t[i, j] == Obstacle) continue;
 
@@ -230,16 +323,16 @@ namespace Pacman3D
                     else g[i, j] = 1; //obstacle
                 }
             int cnt = 2, k;
-            for (int i = 3; i < n; i += 3)
+            for (int i = Passage_Width; i < n; i += Passage_Width)
             {
-                for (int j = 3; j < m; j += 3)
+                for (int j = Passage_Width; j < m; j += Passage_Width)
                 {
                     if (t[i, j] != Empty) continue;
 
 
-                    if (g[i - 3, j] != 0 && g[i, j - 3] != 0)
+                    if (g[i - Passage_Width, j] != 0 && g[i, j - Passage_Width] != 0)
                     {
-                        if (g[i - 3, j] == g[i, j - 3])
+                        if (g[i - Passage_Width, j] == g[i, j - Passage_Width])
                         {
                             k = ran.Next(0, 99);
                             if (k < 60)
@@ -247,12 +340,12 @@ namespace Pacman3D
                                 k = ran.Next(0, 1);
                                 if (k == 0)
                                 {
-                                    g[i, j] = g[i - 3, j];
+                                    g[i, j] = g[i - Passage_Width, j];
                                     buildWallUp(i, j);
                                 }
                                 else
                                 {
-                                    g[i, j] = g[i, j - 3];
+                                    g[i, j] = g[i, j - Passage_Width];
                                     buildWallLeft(i, j);
                                 }
                             }
@@ -262,24 +355,24 @@ namespace Pacman3D
                             k = ran.Next(0, 119);
                             if (k < 30)
                             {
-                                g[i, j] = g[i - 3, j];
+                                g[i, j] = g[i - Passage_Width, j];
                                 buildWallUp(i, j);
                             }
                             else if (k < 60)
                             {
-                                g[i, j] = g[i, j - 3];
+                                g[i, j] = g[i, j - Passage_Width];
                                 buildWallLeft(i, j);
                             }
                             else if (k < 80)
                             {
-                                int clr = g[i - 3, j];
+                                int clr = g[i - Passage_Width, j];
                                 for (int _i = 0; _i < n; ++_i)
                                 {
                                     for (int _j = 0; _j < m; ++_j)
                                     {
                                         if (g[_i, _j] == clr)
                                         {
-                                            g[_i, _j] = g[i, j - 3];
+                                            g[_i, _j] = g[i, j - Passage_Width];
                                         }
                                     }
                                 }
@@ -289,33 +382,33 @@ namespace Pacman3D
                             }
                         }
                     }
-                    else if (g[i - 3, j] != 0)
+                    else if (g[i - Passage_Width, j] != 0)
                     { //only up
                         k = ran.Next(0, 89);
                         if (k < 30)
                         {
-                            g[i, j] = g[i - 3, j];
+                            g[i, j] = g[i - Passage_Width, j];
                             buildWallUp(i, j);
                         }
                         else if (k < 60)
                         {
-                            g[i, j] = g[i, j - 3] = cnt++;
-                            setType(new GamePos(i, j - 3), Wall);
+                            g[i, j] = g[i, j - Passage_Width] = cnt++;
+                            setType(new GamePos(i, j - Passage_Width), Wall);
                             buildWallLeft(i, j);
                         }
                     }
-                    else if (g[i, j - 3] != 0)
+                    else if (g[i, j - Passage_Width] != 0)
                     { //only left
                         k = ran.Next(0, 89);
                         if (k < 30)
                         {
-                            g[i, j] = g[i - 3, j] = cnt++;
-                            setType(new GamePos(i - 3, j), Wall);
+                            g[i, j] = g[i - Passage_Width, j] = cnt++;
+                            setType(new GamePos(i - Passage_Width, j), Wall);
                             buildWallUp(i, j);
                         }
                         else if (k < 60)
                         {
-                            g[i, j] = g[i, j - 3];
+                            g[i, j] = g[i, j - Passage_Width];
                             buildWallLeft(i, j);
                         }
                     }
@@ -324,21 +417,21 @@ namespace Pacman3D
                         k = ran.Next(0, 119);
                         if (k < 30)
                         {
-                            g[i, j] = g[i - 3, j] = cnt++;
-                            setType(new GamePos(i - 3, j), Wall);
+                            g[i, j] = g[i - Passage_Width, j] = cnt++;
+                            setType(new GamePos(i - Passage_Width, j), Wall);
                             buildWallUp(i, j);
                         }
                         else if (k < 60)
                         {
-                            g[i, j] = g[i, j - 3] = cnt++;
-                            setType(new GamePos(i, j - 3), Wall);
+                            g[i, j] = g[i, j - Passage_Width] = cnt++;
+                            setType(new GamePos(i, j - Passage_Width), Wall);
                             buildWallLeft(i, j);
                         }
                         else if (k < 90)
                         {
-                            g[i, j] = g[i - 3, j] = g[i, j - 3] = cnt++;
-                            setType(new GamePos(i - 3, j), Wall);
-                            setType(new GamePos(i, j - 3), Wall);
+                            g[i, j] = g[i - Passage_Width, j] = g[i, j - Passage_Width] = cnt++;
+                            setType(new GamePos(i - Passage_Width, j), Wall);
+                            setType(new GamePos(i, j - Passage_Width), Wall);
                             buildWallUp(i, j);
                             buildWallLeft(i, j);
                         }

@@ -162,7 +162,6 @@ namespace Pacman3D
             return crossProduct(b - a, c - b).len() / 2;
         }
     
-	
 	};
 
     public class Line

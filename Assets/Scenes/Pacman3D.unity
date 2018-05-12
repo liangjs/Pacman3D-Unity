@@ -437,8 +437,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fe11eb4a0b2d9e740af4e9876755621c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  spatialProcessingObj: {fileID: 0}
-  initializeObj: {fileID: 0}
+  spatialProcessingObj: {fileID: 2061608564}
+  initializeObj: {fileID: 1518305066}
+  mixedRealityCamera: {fileID: 1815512152}
 --- !u!1001 &972550930
 Prefab:
   m_ObjectHideFlags: 0
@@ -687,6 +688,18 @@ Prefab:
         type: 2}
       propertyPath: field of view
       value: 41
+      objectReference: {fileID: 0}
+    - target: {fileID: 4562275514082094, guid: d29bc40b7f3df26479d6a0aac211c355, type: 2}
+      propertyPath: m_RootOrder
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 4931155170010354, guid: d29bc40b7f3df26479d6a0aac211c355, type: 2}
+      propertyPath: m_RootOrder
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4587520633816736, guid: d29bc40b7f3df26479d6a0aac211c355, type: 2}
+      propertyPath: m_RootOrder
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: d29bc40b7f3df26479d6a0aac211c355, type: 2}
@@ -1142,6 +1155,21 @@ Prefab:
       propertyPath: m_RootOrder
       value: 14
       objectReference: {fileID: 0}
+    - target: {fileID: 114466270602637258, guid: 26fea3cf865613c47973b3a604d6fab9,
+        type: 2}
+      propertyPath: mixedRealityCamera
+      value: 
+      objectReference: {fileID: 1815512152}
+    - target: {fileID: 114466270602637258, guid: 26fea3cf865613c47973b3a604d6fab9,
+        type: 2}
+      propertyPath: winText
+      value: 
+      objectReference: {fileID: 228671316}
+    - target: {fileID: 114466270602637258, guid: 26fea3cf865613c47973b3a604d6fab9,
+        type: 2}
+      propertyPath: countText
+      value: 
+      objectReference: {fileID: 236178151}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 26fea3cf865613c47973b3a604d6fab9, type: 2}
   m_IsPrefabParent: 0
