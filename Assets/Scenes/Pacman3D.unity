@@ -1824,6 +1824,11 @@ Prefab:
       propertyPath: win
       value: 
       objectReference: {fileID: 1305408947}
+    - target: {fileID: 114466270602637258, guid: 26fea3cf865613c47973b3a604d6fab9,
+        type: 2}
+      propertyPath: mapGenerator
+      value: 
+      objectReference: {fileID: 915991709}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 26fea3cf865613c47973b3a604d6fab9, type: 2}
   m_IsPrefabParent: 0

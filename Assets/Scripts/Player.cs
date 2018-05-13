@@ -10,7 +10,7 @@ public class Player : MonoBehaviour
     public GameObject mapGenerator;
     public Text countText, winText;
     public int count, hit_wall;
-    public int MAX_BEAN_NUM;
+    public int MAX_BEAN_NUM = 1000;
     public double hit_wall_time;
     public string status;
     public AudioSource eat_bean, crash_wall, die, win;
@@ -22,12 +22,15 @@ public class Player : MonoBehaviour
         SetCountText();
         winText.text = "";
         status = "live";
-        MAX_BEAN_NUM = mapGenerator.GetComponent<MapGenerator>().gameMap.BeanNum;
     }
 
     // Update is called once per frame
     void Update()
     {
+        var tmp = mapGenerator.GetComponent<MapGenerator>();
+        if (tmp.gameMapFinish)
+            MAX_BEAN_NUM = tmp.gameMap.BeanNum;
+
         Transform cameraTransform = mixedRealityCamera.GetComponent<Transform>();
         Vector3 position = cameraTransform.localPosition;
         transform.localPosition = position;
