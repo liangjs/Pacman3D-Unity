@@ -6,10 +6,10 @@ public class Monster : MonoBehaviour {
 
     // Use this for initialization
     public Player player;
-    public double speed;
-    public Vector3 dir, player_location, now_location;
+    public float speed;
+    private Vector3 dir, player_location, now_location;
 	void Start () {
-        speed = 0.5;
+        //speed = 0.5f;
 	}
 	
     void Rotate_Face()
@@ -33,5 +33,13 @@ public class Monster : MonoBehaviour {
             dir = player_location - now_location;
 
         Rotate_Face();
+
+        if (hasCollider) {
+            Rigidbody monsterRigidbody = GetComponent<Rigidbody>();
+            // Vector3 velocity = monsterRigidbody.velocity;
+            Vector3 normalizedDir = Vector3.Normalize(dir);
+            Vector3 velocity = normalizedDir * speed;
+            monsterRigidbody.velocity = velocity;
+        }
     }
 }
