@@ -541,7 +541,7 @@ namespace Pacman3D
             xLimit = (float)_n - FloatCmp.EPS;
             yLimit = (float)_m - FloatCmp.EPS;
         }
-}
+
 
         private void generateBeans(int bnum)
         {
