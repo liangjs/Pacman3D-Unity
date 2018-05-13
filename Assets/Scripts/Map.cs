@@ -133,11 +133,11 @@ namespace Pacman3D
                 for (int x = (int)x1; x <= (int)x2; ++x)
                 {
                     float y = y1 + dy * (x - x1) / dx;
-                    setType(new GamePos(x, (int)y), Obstacle);
+                    setType(new GamePos(x, (int)y), Wall);
                 }
             else
                 for (int y = (int)Math.Min(y1,y2); y <= (int)Math.Max(y1, y2); ++y)
-                    setType(new GamePos((int)x1, (int)y), Obstacle);
+                    setType(new GamePos((int)x1, (int)y), Wall);
         }
         
         void bfs(int x, int y)
@@ -518,6 +518,7 @@ namespace Pacman3D
             xLimit = (float)_n - FloatCmp.EPS;
             yLimit = (float)_m - FloatCmp.EPS;
         }
+}
 
         private void generateBeans(int bnum)
         {
