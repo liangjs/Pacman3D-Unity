@@ -277,6 +277,8 @@ namespace Pacman3D
             float dis2 = PLdistance(c.cir, new Point3D(r.points[0].coord[0], r.points[1].coord[1]), new Point3D(r.points[1].coord[0], r.points[1].coord[1]));
             float dis3 = PLdistance(c.cir, new Point3D(r.points[1].coord[0], r.points[1].coord[1]), new Point3D(r.points[1].coord[0], r.points[0].coord[1]));
             float dis4 = PLdistance(c.cir, new Point3D(r.points[1].coord[0], r.points[0].coord[1]), new Point3D(r.points[0].coord[0], r.points[0].coord[1]));
+            float dis = Math.Min(Math.Min(dis1, dis2), Math.Min(dis3, dis4));
+            return dis + FloatCmp.EPS - c.r > 0;
             float distance1 = (float)Math.Sqrt((c.c.coord[0] - r.points[0].coord[0])*(c.c.coord[0] - r.points[0].coord[0])
                 +(c.c.coord[1]-r.points[0].coord[1])*(c.c.coord[1]-r.points[0].coord[1]));
             float distance2 = (float)Math.Sqrt((c.c.coord[0] - r.points[1].coord[0])*(c.c.coord[0] - r.points[1].coord[0])
