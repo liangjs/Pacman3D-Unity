@@ -246,7 +246,7 @@ namespace Pacman3D
             /*float distance=(float)Math.Sqrt((c1.c.coord[0]-c2.c.coord[0])*(c1.c.coord[0]-c2.c.coord[0])
                 +(c1.c.coord[1]-c2.c.coord[1])*(c1.c.coord[1]-c2.c.coord[1])
                 +(c1.c.coord[2]-c2.c.coord[2])*(c1.c.coord[2]-c2.c.coord[2]));*/
-            if (Point3D.distance(c1.c, c2.c) >= c1.r + c2.r) return true;
+            if (Point3D.distance(c1.c, c2.c) <= c1.r + c2.r) return true;
             else return false;
         }
 
@@ -277,12 +277,15 @@ namespace Pacman3D
             float dis2 = PLdistance(c.c, new Point3D(r.points[0].coord[0], r.points[1].coord[1]), new Point3D(r.points[1].coord[0], r.points[1].coord[1]));
             float dis3 = PLdistance(c.c, new Point3D(r.points[1].coord[0], r.points[1].coord[1]), new Point3D(r.points[1].coord[0], r.points[0].coord[1]));
             float dis4 = PLdistance(c.c, new Point3D(r.points[1].coord[0], r.points[0].coord[1]), new Point3D(r.points[0].coord[0], r.points[0].coord[1]));
+            float dis = Math.Min(Math.Min(dis1, dis2), Math.Min(dis3, dis4));
+            return dis + FloatCmp.EPS - c.r > 0;
+            /*
             float distance1 = (float)Math.Sqrt((c.c.coord[0] - r.points[0].coord[0])*(c.c.coord[0] - r.points[0].coord[0])
                 +(c.c.coord[1]-r.points[0].coord[1])*(c.c.coord[1]-r.points[0].coord[1]));
             float distance2 = (float)Math.Sqrt((c.c.coord[0] - r.points[1].coord[0])*(c.c.coord[0] - r.points[1].coord[0])
                 +(c.c.coord[1]-r.points[1].coord[1])*(c.c.coord[1]-r.points[1].coord[1]));
             float distance=Math.Min(distance1,distance2);
-            return distance > c.r;
+            return distance > c.r;*/
          }
 	};
 
