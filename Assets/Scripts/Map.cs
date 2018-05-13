@@ -613,7 +613,7 @@ namespace Pacman3D
         public void generateMap()
         {// using base's generate and transform to successive
             generate();
-            generateBeans(n * m);
+            generateBeans(Math.Min(n * m, 5));
             generateMonsters();
         }
         // need : generate() -> generateBeans() -> generateMonsters() 

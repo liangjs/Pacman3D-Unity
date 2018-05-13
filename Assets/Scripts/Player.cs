@@ -3,26 +3,31 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class Player : MonoBehaviour {
+public class Player : MonoBehaviour
+{
 
     public GameObject mixedRealityCamera;
+    public GameObject mapGenerator;
     public Text countText, winText;
     public int count, hit_wall;
-    public const int MAX_BEAN_NUM = 3;
+    public int MAX_BEAN_NUM;
     public double hit_wall_time;
     public string status;
     public AudioSource eat_bean, crash_wall, die, win;
     // Use this for initialization
-    void Start () {
+    void Start()
+    {
         count = 0;
         hit_wall = 0;
         SetCountText();
         winText.text = "";
         status = "live";
+        MAX_BEAN_NUM = mapGenerator.GetComponent<MapGenerator>().gameMap.BeanNum;
     }
-	
-	// Update is called once per frame
-	void Update () {
+
+    // Update is called once per frame
+    void Update()
+    {
         Transform cameraTransform = mixedRealityCamera.GetComponent<Transform>();
         Vector3 position = cameraTransform.localPosition;
         transform.localPosition = position;
@@ -31,7 +36,7 @@ public class Player : MonoBehaviour {
         die.transform.localPosition = position;
         win.transform.localPosition = position;
         SetCountText();
-	}
+    }
 
     // When this game object intersects a collider with 'is trigger' checked, 
     // store a reference to that collider in a variable named 'other'..
@@ -87,7 +92,7 @@ public class Player : MonoBehaviour {
         if (other.gameObject.CompareTag("Wall"))
         {
             hit_wall_time += Time.deltaTime;
-            if(hit_wall_time > 3.0)
+            if (hit_wall_time > 3.0)
             {
                 status = "dead";
                 die.Play();
@@ -112,7 +117,7 @@ public class Player : MonoBehaviour {
     void SetCountText()
     {
         // Update the text field of our 'countText' variable
-        countText.text = "Count: " + count.ToString() + "    Hit Wall:" + hit_wall.ToString();
+        countText.text = "Count: " + count.ToString() + "/" + MAX_BEAN_NUM.ToString() + "    Hit Wall: " + hit_wall.ToString();
 
         // Check if dead
         if (status == "dead")
