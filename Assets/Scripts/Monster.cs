@@ -57,4 +57,15 @@ public class Monster : MonoBehaviour {
             monsterRigidbody.velocity = outVelocity;
         }
     }
+
+    void OnTriggerEnter(Collision other) {
+        if (other.gameObject.CompareTag("Wall"))
+        {
+            Rigidbody monsterRigidbody = GetComponent<Rigidbody>();
+            Vector3 inVelocity = monsterRigidbody.velocity;
+            Vector3 collisionNormal = other.contacts[0].normal;
+            Vector3 outVelocity = Vector3.Reflect(inVelocity, collisionNormal);
+            monsterRigidbody.velocity = outVelocity;
+        }
+    }
 }
