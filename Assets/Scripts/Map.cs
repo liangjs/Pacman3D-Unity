@@ -540,6 +540,15 @@ namespace Pacman3D
             Beans = new Circle[n * m];
             xLimit = (float)_n - FloatCmp.EPS;
             yLimit = (float)_m - FloatCmp.EPS;
+            RecNum = 0;
+            for (int i = 0; i < n; ++i)
+                for (int j = 0; j < m; ++j)
+                {
+                    if (t[i][j] == Wall)
+                    {
+                        Recs[RecNum++] = new Rectangle(new Point3D((float) i, (float) j), new Point3D((float) i + 1, (float) j + 1);
+                    }
+                }
         }
 
         private void generateBeans(int bnum)
@@ -557,6 +566,7 @@ namespace Pacman3D
                     if (Circle.RCIntersect(Recs[j], tmp))
                     {
                         flag = false;
+                        break;
                     }
                 }
                 if (!flag) continue;
@@ -565,6 +575,7 @@ namespace Pacman3D
                     if (Circle.CircleIntersect(Beans[j], tmp))
                     {
                         flag = false;
+                        break;
                     }
                 }
                 if (flag)
