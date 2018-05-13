@@ -43,20 +43,20 @@ public class MapDrawer : MonoBehaviour {
                 }
         for (int i = 0; i < gameMap.BeanNum; ++i)
         {
-            Point3D worldPos = trancord.GameToWolrd(gameMap.Beans[i].c);
+            Point3D worldPos = trancord.GameToWolrd(new Point3D(gameMap.Beans[i].c.x, gameMap.Beans[i].c.z, gameMap.Beans[i].c.y));
             GameObject obj = Instantiate(prefabBean);
             obj.transform.parent = WallsObj.transform;
             obj.transform.localPosition = new Vector3(worldPos.x, mixedRealityCamera.transform.localPosition.y - dec, worldPos.z);
-            float d = 2 * gameMap.Beans[i].r * transform_coord.rate;
+            float d = gameMap.Beans[i].r * transform_coord.rate;
             obj.transform.localScale = new Vector3(d, d, d);
         }
         for (int i = 0; i < gameMap.Mons.Length; ++i)
         {
-            Point3D worldPos = trancord.GameToWolrd(gameMap.Mons[i].cir.c);
+            Point3D worldPos = trancord.GameToWolrd(new Point3D(gameMap.Mons[i].cir.c.x, gameMap.Mons[i].cir.c.z, gameMap.Mons[i].cir.c.y));
             GameObject obj = Instantiate(prefabMonster);
             obj.transform.parent = WallsObj.transform;
             obj.transform.localPosition = new Vector3(worldPos.x, mixedRealityCamera.transform.localPosition.y - dec, worldPos.z);
-            float d = 2 * gameMap.Mons[i].cir.r * transform_coord.rate;
+            float d = gameMap.Mons[i].cir.r * transform_coord.rate;
             obj.transform.localScale = new Vector3(d, d, d);
         }
 
