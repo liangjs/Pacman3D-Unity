@@ -5,12 +5,17 @@ using UnityEngine;
 public class Monster : MonoBehaviour {
 
     // Use this for initialization
-    public Player player;
     public float speed;
     private Vector3 dir, player_location, now_location;
-	void Start () {
+    private Player player;
+
+    void Start () {
         //speed = 0.5f;
-	}
+        GameObject playerObj;
+        playerObj = GameObject.Find("Player");
+        player = playerObj.GetComponent<Player>();
+
+    }
 	
     void Rotate_Face()
     {

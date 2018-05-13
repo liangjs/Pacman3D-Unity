@@ -124,11 +124,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9eef8de827fb15a4c8b82277b931fd9f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  player: {fileID: 0}
+  playerObj: {fileID: 0}
   speed: 0
-  dir: {x: 0, y: 0, z: 0}
-  player_location: {x: 0, y: 0, z: 0}
-  now_location: {x: 0, y: 0, z: 0}
 --- !u!135 &135627850658279028
 SphereCollider:
   m_ObjectHideFlags: 1
