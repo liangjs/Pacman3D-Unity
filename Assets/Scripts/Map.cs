@@ -544,7 +544,7 @@ namespace Pacman3D
             for (int i = 0; i < n; ++i)
                 for (int j = 0; j < m; ++j)
                 {
-                    if (t[i][j] == Wall)
+                    if (t[i,j] == Wall)
                     {
                         Recs[RecNum++] = new Rectangle(new Point3D((float) i, (float) j), new Point3D((float) i + 1, (float) j + 1);
                     }

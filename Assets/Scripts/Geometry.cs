@@ -222,7 +222,7 @@ namespace Pacman3D
 	public class Rectangle
 	{
         public Point3D[] points = new Point3D[2];
-		Rectangle(Point3D p1,  Point3D p2)
+		public Rectangle(Point3D p1,  Point3D p2)
         {
             points[0]=p1;
             points[1]=p2;
