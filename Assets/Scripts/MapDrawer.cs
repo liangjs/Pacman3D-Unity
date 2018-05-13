@@ -37,7 +37,7 @@ public class MapDrawer : MonoBehaviour {
                     Point3D worldPos = trancord.GameToWolrd(new GamePos(i,j));
                     GameObject obj = Instantiate(prefabWall);
                     obj.transform.parent = WallsObj.transform;
-                    obj.transform.localPosition = new Vector3(worldPos.x, mixedRealityCamera.transform.localPosition.y, worldPos.z);
+                    obj.transform.localPosition = new Vector3(worldPos.x, mixedRealityCamera.transform.localPosition.y - 1.3f, worldPos.z);
                     obj.transform.localScale = new Vector3(transform_coord.rate, transform_coord.rate*2, transform_coord.rate);
                 }
         for (int i = 0; i < gameMap.BeanNum; ++i)
