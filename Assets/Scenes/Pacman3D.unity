@@ -308,18 +308,6 @@ Prefab:
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: d41fa7615c3c85b40bcc95fc4367b607, type: 2}
   m_IsPrefabParent: 0
---- !u!1 &453143199 stripped
-GameObject:
-  m_PrefabParentObject: {fileID: 1232411303628410, guid: 26fea3cf865613c47973b3a604d6fab9,
-    type: 2}
-  m_PrefabInternal: {fileID: 2125967754}
---- !u!81 &453143200
-AudioListener:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 453143199}
-  m_Enabled: 0
 --- !u!114 &453143201 stripped
 MonoBehaviour:
   m_PrefabParentObject: {fileID: 114466270602637258, guid: 26fea3cf865613c47973b3a604d6fab9,
@@ -677,7 +665,7 @@ Prefab:
     - target: {fileID: 135458660298664242, guid: 30b47786a33058645b562fb994d9b095,
         type: 2}
       propertyPath: m_Radius
-      value: 0.6
+      value: 2
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 30b47786a33058645b562fb994d9b095, type: 2}
@@ -1261,6 +1249,10 @@ Prefab:
     - target: {fileID: 4000012375631134, guid: 184d6e9ce2d89844489583805253eb83, type: 2}
       propertyPath: m_RootOrder
       value: 13
+      objectReference: {fileID: 0}
+    - target: {fileID: 1000010593991404, guid: 184d6e9ce2d89844489583805253eb83, type: 2}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 184d6e9ce2d89844489583805253eb83, type: 2}
@@ -2078,7 +2070,7 @@ Prefab:
     - target: {fileID: 135575794131867814, guid: 26fea3cf865613c47973b3a604d6fab9,
         type: 2}
       propertyPath: m_Radius
-      value: 1
+      value: 0.7
       objectReference: {fileID: 0}
     - target: {fileID: 114466270602637258, guid: 26fea3cf865613c47973b3a604d6fab9,
         type: 2}
