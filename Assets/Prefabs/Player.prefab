@@ -23,7 +23,7 @@ GameObject:
   - component: {fileID: 23342363396421226}
   - component: {fileID: 135575794131867814}
   - component: {fileID: 114466270602637258}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Player
   m_TagString: Player
   m_Icon: {fileID: 0}
@@ -100,6 +100,13 @@ MonoBehaviour:
   countText: {fileID: 0}
   winText: {fileID: 0}
   count: 0
+  hit_wall: 0
+  hit_wall_time: 0
+  status: 
+  eat_bean: {fileID: 0}
+  crash_wall: {fileID: 0}
+  die: {fileID: 0}
+  win: {fileID: 0}
 --- !u!135 &135575794131867814
 SphereCollider:
   m_ObjectHideFlags: 1
@@ -110,5 +117,5 @@ SphereCollider:
   m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 2
-  m_Radius: 1
+  m_Radius: 0.7
   m_Center: {x: 0, y: 0, z: 0}

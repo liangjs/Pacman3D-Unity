@@ -48,6 +48,7 @@ public class Player : MonoBehaviour {
             {
                 status = "win";
                 win.Play();
+                gameObject.SetActive(false);
             }
             eat_bean.Play();
         }
@@ -57,6 +58,7 @@ public class Player : MonoBehaviour {
             count = 0;
             status = "dead";
             die.Play();
+            gameObject.SetActive(false);
             //TODO: add some audio
         }
 
@@ -72,6 +74,7 @@ public class Player : MonoBehaviour {
                 {
                     status = "dead";
                     die.Play();
+                    gameObject.SetActive(false);
                 }
                 mixedRealityCamera.GetComponent<Camera>().cullingMask ^= (1 << 9);
             }
@@ -88,6 +91,7 @@ public class Player : MonoBehaviour {
             {
                 status = "dead";
                 die.Play();
+                gameObject.SetActive(false);
             }
         }
         SetCountText();
