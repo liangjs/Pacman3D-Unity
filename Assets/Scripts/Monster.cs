@@ -39,12 +39,22 @@ public class Monster : MonoBehaviour {
 
         Rotate_Face();
 
-        if (hasCollider) {
+        if (hasCollider && hit_info.collider.CompareTag("Player")) {
             Rigidbody monsterRigidbody = GetComponent<Rigidbody>();
             // Vector3 velocity = monsterRigidbody.velocity;
             Vector3 normalizedDir = Vector3.Normalize(dir);
             Vector3 velocity = normalizedDir * speed;
             monsterRigidbody.velocity = velocity;
+        }
+    }
+
+    void OnCollisionEnter(Collision other) {
+        if (other.gameObject.CompareTag("Wall")) {
+            Rigidbody monsterRigidbody = GetComponent<Rigidbody>();
+            Vector3 inVelocity = monsterRigidbody.velocity;
+            Vector3 collisionNormal = other.contacts[0].normal;
+            Vector3 outVelocity = Vector3.Reflect(inVelocity, collisionNormal);
+            monsterRigidbody.velocity = outVelocity;
         }
     }
 }

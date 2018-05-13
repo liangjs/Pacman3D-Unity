@@ -135,8 +135,8 @@ namespace Pacman3D
 		    a.coord[1] *= b.coord[1];
 		    a.coord[2] *= b.coord[2];
 	    }
-    
-        static Point3D crossProduct(Point3D a, Point3D b)
+
+        public static Point3D crossProduct(Point3D a, Point3D b)
         {
             Point3D point3d = new Point3D(a.coord[1] * b.coord[2] - a.coord[2] * b.coord[1],
 			-a.coord[0] * b.coord[2] + a.coord[2] * b.coord[0],
@@ -144,28 +144,28 @@ namespace Pacman3D
             return point3d;
         }
     
-        static float dotsProduct(Point3D a,  Point3D b)
+        public static float dotsProduct(Point3D a,  Point3D b)
         {
             return a.coord[0] * b.coord[0] + a.coord[1] * b.coord[1] + a.coord[2] * b.coord[2];
         }
 
         
-        static Point3D elemMult(Point3D a, Point3D b)
+        public static Point3D elemMult(Point3D a, Point3D b)
         {
             Point3D point3d = new Point3D(a.coord[0] * b.coord[0], a.coord[1] * b.coord[1], a.coord[2] * b.coord[2]);
             return point3d;
         }
-    
-     
-        static float determinant(Point3D a, Point3D b, Point3D c)
+
+
+        public static float determinant(Point3D a, Point3D b, Point3D c)
         {
             return a.coord[0] * b.coord[1] * c.coord[2] - a.coord[0] * b.coord[2] * c.coord[1] +
 			a.coord[1] * b.coord[2] * c.coord[0] - a.coord[1] * b.coord[0] * c.coord[2] +
 			a.coord[2] * b.coord[0] * c.coord[1] - a.coord[2] * b.coord[1] * c.coord[0];
         }
 
-    
-        static float calcArea(Point3D a, Point3D b, Point3D c)
+
+        public static float calcArea(Point3D a, Point3D b, Point3D c)
         {
             return crossProduct(b - a, c - b).len() / 2;
         }
@@ -250,8 +250,33 @@ namespace Pacman3D
             else return false;
         }
 
+        static float PLdistance(Point3D c, Point3D a, Point3D b)
+        {
+            Point3D ab = b - a;
+
+            Point3D ac = c - a;
+
+            float f = Point3D.dotsProduct(ab, ac);
+
+            if (f + FloatCmp.EPS < 0) return Point3D.distance(c, a);
+
+            float d = Point3D.dotsProduct(ab, ab);
+
+            if (f > d) return Point3D.distance(c, b);
+
+            f = f / d;
+
+            Point3D D = a + f * ab;   // c在ab线段上的投影点
+
+            return Point3D.distance(c, D);
+        }
+
         public static bool RCIntersect(Rectangle r,Circle c)
         {
+            float dis1 = PLdistance(c.c, new Point3D(r.points[0].coord[0], r.points[0].coord[1]), new Point3D(r.points[0].coord[0], r.points[1].coord[1]));
+            float dis2 = PLdistance(c.c, new Point3D(r.points[0].coord[0], r.points[1].coord[1]), new Point3D(r.points[1].coord[0], r.points[1].coord[1]));
+            float dis3 = PLdistance(c.c, new Point3D(r.points[1].coord[0], r.points[1].coord[1]), new Point3D(r.points[1].coord[0], r.points[0].coord[1]));
+            float dis4 = PLdistance(c.c, new Point3D(r.points[1].coord[0], r.points[0].coord[1]), new Point3D(r.points[0].coord[0], r.points[0].coord[1]));
             float distance1 = (float)Math.Sqrt((c.c.coord[0] - r.points[0].coord[0])*(c.c.coord[0] - r.points[0].coord[0])
                 +(c.c.coord[1]-r.points[0].coord[1])*(c.c.coord[1]-r.points[0].coord[1]));
             float distance2 = (float)Math.Sqrt((c.c.coord[0] - r.points[1].coord[0])*(c.c.coord[0] - r.points[1].coord[0])
