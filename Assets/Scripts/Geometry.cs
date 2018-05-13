@@ -169,8 +169,12 @@ namespace Pacman3D
         {
             return crossProduct(b - a, c - b).len() / 2;
         }
-    
-	};
+
+        public static Point3D FromGamePos(GamePos p)
+        {
+            return new Point3D(p.x, 0, p.y);
+        }
+    };
 
     public class Line
     {

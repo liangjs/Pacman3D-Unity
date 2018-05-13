@@ -20,6 +20,8 @@ public class MapGenerator : MonoBehaviour {
     private bool meshProcessed = false;
 
     public SuccesiveGameMap gameMap = null;
+    public transform_coord trancord = null;
+    public bool gameMapFinish = false;
 
     // Use this for initialization
     void Start () {
@@ -78,51 +80,115 @@ public class MapGenerator : MonoBehaviour {
                         floorbd = floorSurface.GetComponent<Renderer>().bounds;
                     }
                 }
-                else if ((surfacePlane.PlaneType & PlaneTypes.Ceiling) == surfacePlane.PlaneType)
+                else
                 {
-                    Bounds bd = surfacePlane.GetComponent<Renderer>().bounds;
-                    if (ceilSurface == null || bd.extents.x * bd.extents.z > ceilbd.extents.x * ceilbd.extents.z)
+                    //surfacePlane.IsVisible = false;
+                    if ((surfacePlane.PlaneType & PlaneTypes.Ceiling) == surfacePlane.PlaneType)
                     {
-                        ceilSurface = surfacePlane;
-                        ceilbd = ceilSurface.GetComponent<Renderer>().bounds;
+                        Bounds bd = surfacePlane.GetComponent<Renderer>().bounds;
+                        if (ceilSurface == null || bd.extents.x * bd.extents.z > ceilbd.extents.x * ceilbd.extents.z)
+                        {
+                            ceilSurface = surfacePlane;
+                            ceilbd = ceilSurface.GetComponent<Renderer>().bounds;
+                        }
                     }
                 }
                 surfacePlane.IsVisible = false;
             }
         }
 
-        transform_coord trancord = new transform_coord();
-        GamePos nm = trancord.tranformxyz(4, new Point3D[4] { new Point3D(floorbd.center.x - floorbd.extents.x / 2, 0, floorbd.center.z - floorbd.extents.z / 2),
-                                                    new Point3D(floorbd.center.x + floorbd.extents.x / 2, 0, floorbd.center.z - floorbd.extents.z / 2),
-                                                    new Point3D(floorbd.center.x + floorbd.extents.x / 2, 0, floorbd.center.z + floorbd.extents.z / 2),
-                                                    new Point3D(floorbd.center.x - floorbd.extents.x / 2, 0, floorbd.center.z + floorbd.extents.z / 2)});
+        if (floorSurface == null)
+        {
+            Debug.LogError("floor not found");
+            return;
+        }
+
+        trancord = new transform_coord();
+        GamePos nm = trancord.tranformxyz(4, new Point3D[4] { new Point3D(floorbd.center.x - floorbd.extents.x / 2, floorbd.center.y, floorbd.center.z - floorbd.extents.z / 2),
+                                                    new Point3D(floorbd.center.x + floorbd.extents.x / 2, floorbd.center.y, floorbd.center.z - floorbd.extents.z / 2),
+                                                    new Point3D(floorbd.center.x + floorbd.extents.x / 2, floorbd.center.y, floorbd.center.z + floorbd.extents.z / 2),
+                                                    new Point3D(floorbd.center.x - floorbd.extents.x / 2, floorbd.center.y, floorbd.center.z + floorbd.extents.z / 2)});
 
         gameMap = new SuccesiveGameMap(nm.x + 1, nm.y + 1);
-        gameMap.addBorder(new Line[4] {
-                new Line(new Point3D(0,0), new Point3D(nm.x, 0)),
-                new Line(new Point3D(nm.x, 0), new Point3D(nm.x, nm.y)),
-                new Line(new Point3D(nm.x, nm.y),new Point3D(0, nm.y)),
-                new Line(new Point3D(0, nm.y),new Point3D(0,0))
-            });
         gameMap.setPlayer(new Point3D(mixedRealityCamera.transform.localPosition));
 
-        List<MeshFilter> meshFilters = SpatialMappingManager.Instance.GetMeshFilters();
-        for (int i = 0; i < meshFilters.Count; i++)
+        /*List<Mesh> meshes = SpatialMappingManager.Instance.GetMeshes();
+        Point3D pmnx, pmnz, pmxx, pmxz;
+        pmnx = new Point3D(FloatCmp.INF, 0, 0);
+        pmnz = new Point3D(0, 0, FloatCmp.INF);
+        pmxx = new Point3D(-FloatCmp.INF, 0, 0);
+        pmxz = new Point3D(0, 0, -FloatCmp.INF);
+        float mny = FloatCmp.INF, mxy = -FloatCmp.INF;
+
+        for (int i = 0; i < meshes.Count; i++)
         {
-            Vector3[] vertices = meshFilters[i].mesh.vertices;
-            int[] tris = meshFilters[i].mesh.triangles;
+            Vector3[] vertices = meshes[i].vertices;
+            int[] tris = meshes[i].triangles;
+            for (int j = 0; j < tris.Length; j += 3)
+            {
+                Vector3 p1 = vertices[tris[j]];
+                Vector3 p2 = vertices[tris[j + 1]];
+                Vector3 p3 = vertices[tris[j + 2]];
+                Vector3 center = (p1 + p2 + p3) / 3;
+                if (floorbd.center.x - floorbd.extents.x / 2 <= center.x && center.x <= floorbd.center.x + floorbd.extents.x / 2
+                    && floorbd.center.z - floorbd.extents.z / 2 <= center.z && center.z <= floorbd.center.z + floorbd.extents.z / 2
+                    )//&& System.Math.Abs(floorbd.center.y - center.y) < 0.01)
+                {
+                    if (center.x < pmnx.x)
+                        pmnx = new Point3D(center);
+                    if (center.x > pmxx.x)
+                        pmxx = new Point3D(center);
+                    if (center.z < pmnz.z)
+                        pmnz = new Point3D(center);
+                    if (center.z > pmxz.z)
+                        pmxz = new Point3D(center);
+                }
+                mny = System.Math.Min(mny, center.y);
+                mxy = System.Math.Max(mxy, center.y);
+            }
+        }
+        pmnx = trancord.WorldToGame(pmnx);
+        pmxx = trancord.WorldToGame(pmxx);
+        pmnz = trancord.WorldToGame(pmnz);
+        pmxz = trancord.WorldToGame(pmxz);*/
+        /*gameMap.addBorder(new Line[4] {
+                new Line(pmnx, pmnz),
+                new Line(pmxx, pmnz),
+                new Line(pmnx, pmxz),
+                new Line(pmxx, pmxz)
+            });*/
+        gameMap.addBorder(new Line[4] {
+                new Line(new Point3D(0,0), new Point3D(nm.x,0)),
+                new Line(new Point3D(nm.x,0), new Point3D(nm.x,nm.y)),
+                new Line(new Point3D(nm.x,nm.y), new Point3D(0,nm.y)),
+                new Line(new Point3D(0,nm.y), new Point3D(0,0))
+            });
+
+        /*for (int i = 0; i < meshes.Count; i++)
+        {
+            Vector3[] vertices = meshes[i].vertices;
+            int[] tris = meshes[i].triangles;
             for (int j = 0; j < tris.Length; j += 3)
             {
                 Vector3 p1 = vertices[tris[j]];
                 Vector3 p2 = vertices[tris[j+1]];
                 Vector3 p3 = vertices[tris[j+2]];
                 Vector3 center = (p1 + p2 + p3) / 3;
-                if (floorbd.Contains(center) || ceilbd.Contains(center))
+                if (floorbd.center.x - floorbd.extents.x / 2 <= center.x && center.x <= floorbd.center.x + floorbd.extents.x / 2
+                    && floorbd.center.z - floorbd.extents.z / 2 <= center.z && center.z <= floorbd.center.z + floorbd.extents.z / 2
+                    )//&& FloatCmp.cmp(floorbd.center.y, center.y) == 0)
                     continue;
-                gameMap.addTriangle(new Triangle(new Point3D(p1), new Point3D(p2), new Point3D(p3)));
+                if (ceilSurface != null && ceilbd.center.x - ceilbd.extents.x / 2 <= center.x && center.x <= ceilbd.center.x + ceilbd.extents.x / 2
+                    && ceilbd.center.z - ceilbd.extents.z / 2 <= center.z && center.z <= ceilbd.center.z + ceilbd.extents.z / 2
+                    )//&& FloatCmp.cmp(ceilbd.center.y, center.y) == 0)
+                    continue;
+                gameMap.addTriangle(new Triangle(trancord.WorldToGame(new Point3D(p1)), trancord.WorldToGame(new Point3D(p2)), trancord.WorldToGame(new Point3D(p3))));
             }
-        }
+        }*/
 
         gameMap.generateMap();
+        gameMapFinish = true;
+
+        Debug.Log("Finish Generating Map");
     }
 }

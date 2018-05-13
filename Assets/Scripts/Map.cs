@@ -22,12 +22,14 @@ namespace Pacman3D
     {
         public const float rate = 0.2f;
         public float maxx, maxz, minx, minz;
+        public float meany;
         public GamePos tranformxyz(int num, Point3D[] p)
         {
             maxx = Max_x(num, p);
             minx = Min_x(num, p);
             maxz = Max_z(num, p);
             minz = Min_z(num, p);
+            meany = Mean(num, p);
 
             // determine m, n   m:col_num  n:row_num  
             int m = (int)((maxx - minx) / rate + 1);
@@ -36,13 +38,34 @@ namespace Pacman3D
             return new GamePos(m, n);
         }
 
-        public GamePos query(Point3D p)
+        public Point3D WorldToGame(Point3D p)
         {
-            int x = (int)((p.x - minx) / rate);
-            int y = (int)((p.z - minz) / rate);
-            return new GamePos(x, y);
+            float x = ((p.x - minx) / rate);
+            float y = ((p.z - minz) / rate);
+            return new Point3D(x, 0, y);
         }
 
+        public Point3D GameToWolrd(Point3D p)
+        {
+            float x = p.x * rate + minx;
+            float z = p.z * rate + minz;
+            return new Point3D(x, meany, z);
+        }
+
+        public Point3D GameToWolrd(GamePos p)
+        {
+            return GameToWolrd(new Point3D(p.x, 0, p.y));
+        }
+
+        private float Mean(int num, Point3D[] p) // num is number of input dots(x,y,z)
+        {
+            float res = 0;
+            for (int i = 0; i < num; i++)
+            {
+                res += p[i].coord[1];
+            }
+            return res;
+        }
         private float Max_x(int num, Point3D[] p) // num is number of input dots(x,y,z)
         {
             float res = -FloatCmp.INF;
@@ -499,17 +522,17 @@ namespace Pacman3D
     public class SuccesiveGameMap : GameMap
     {
         Rectangle[] Recs;
-        Circle[] Beans;
-        Monster[] Mons;
+        public Circle[] Beans;
+        public Monster[] Mons;
         Circle Play;
         public int RecNum;
         public float xLimit;
         public float yLimit;
         public int BeanNum;
 
-        private const float Bean_radius = 1;
-        private const float Monster_radius = 1;
-        private const float Player_radius = 0.5f;
+        public const float Bean_radius = 1;
+        public const float Monster_radius = 1;
+        public const float Player_radius = 0.5f;
 
         public SuccesiveGameMap(int _n = 0, int _m = 0):base(_n, _m)
         {
