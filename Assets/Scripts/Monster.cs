@@ -58,7 +58,7 @@ public class Monster : MonoBehaviour {
         }
     }
 
-    void OnTriggerEnter(Collision other) {
+    void OnTriggerEnter(Collider other) {
         if (other.gameObject.CompareTag("Wall"))
         {
             Rigidbody monsterRigidbody = GetComponent<Rigidbody>();
