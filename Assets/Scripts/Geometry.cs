@@ -250,8 +250,33 @@ namespace Pacman3D
             else return false;
         }
 
+        static float PLdistance(Point3D c, Point3D a, Point3D b)
+        {
+            Point ab = b - a;
+
+            Point ac = c - a;
+
+            float f = ab * ac;
+
+            if (f + EPS < 0) return distance(c, a);
+
+            float d = ab * ab;
+
+            if (f > d) return distance(c, b);
+
+            f = f / d;
+
+            Point D = a + f * ab;   // c在ab线段上的投影点
+
+            return distance(c, D);
+        }
+
         public static bool RCIntersect(Rectangle r,Circle c)
         {
+            float dis1 = PLdistance(c.cir, new Point3D(r.points[0].coord[0], r.points[0].coord[1]), new Point3D(r.points[0].coord[0], r.points[1].coord[1]));
+            float dis2 = PLdistance(c.cir, new Point3D(r.points[0].coord[0], r.points[1].coord[1]), new Point3D(r.points[1].coord[0], r.points[1].coord[1]));
+            float dis3 = PLdistance(c.cir, new Point3D(r.points[1].coord[0], r.points[1].coord[1]), new Point3D(r.points[1].coord[0], r.points[0].coord[1]));
+            float dis4 = PLdistance(c.cir, new Point3D(r.points[1].coord[0], r.points[0].coord[1]), new Point3D(r.points[0].coord[0], r.points[0].coord[1]));
             float distance1 = (float)Math.Sqrt((c.c.coord[0] - r.points[0].coord[0])*(c.c.coord[0] - r.points[0].coord[0])
                 +(c.c.coord[1]-r.points[0].coord[1])*(c.c.coord[1]-r.points[0].coord[1]));
             float distance2 = (float)Math.Sqrt((c.c.coord[0] - r.points[1].coord[0])*(c.c.coord[0] - r.points[1].coord[0])
