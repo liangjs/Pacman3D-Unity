@@ -24,13 +24,13 @@ public class Monster : MonoBehaviour {
         // Check if Monster can see Player, if so, change direction to player
         now_location = transform.localPosition;
         player_location = player.transform.localPosition;
-        Ray ray_to_player = new Ray(now_location, player_location);
+        Ray ray_to_player = new Ray(now_location, player_location - now_location);
         RaycastHit hit_info = new RaycastHit();
         int layer_mark = (1 << 9) | (1 << 10); // only hit wall or player
-        Physics.Raycast(ray_to_player, out hit_info, 1e9f, layer_mark);
-        dir = player_location - now_location;
-        //if (hit_info.collider.CompareTag("Player") || true)
-            //dir = player_location - now_location;
+        bool hasCollider = Physics.Raycast(ray_to_player, out hit_info, 1e9f, layer_mark);
+        //dir = player_location - now_location;
+        if (hasCollider && hit_info.collider.CompareTag("Player"))
+            dir = player_location - now_location;
 
         Rotate_Face();
     }
