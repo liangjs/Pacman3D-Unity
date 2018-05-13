@@ -15,7 +15,8 @@ public class Monster : MonoBehaviour {
     void Rotate_Face()
     {
         transform.localRotation = Quaternion.LookRotation(dir);
-        transform.localEulerAngles.Set(transform.localEulerAngles.x, transform.localEulerAngles.y - 150.0f, transform.localEulerAngles.z);
+        transform.Rotate(0.0f, -97.5f, 0.0f);
+        // transform.localEulerAngles.Set(transform.localEulerAngles.x, transform.localEulerAngles.y - 150.0f, transform.localEulerAngles.z);
     }
 
 	// Update is called once per frame
